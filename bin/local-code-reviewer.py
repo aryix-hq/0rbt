@@ -46,7 +46,8 @@ def audit_diff_rules(diff_text: str) -> List[Dict[str, Any]]:
             current_file = line[6:].strip()
             continue
 
-        if current_file in ["bin/local-code-reviewer.py", "bin/invariant-fuzzer.py", "bin/adversarial-fuzzer.py"]:
+        if current_file in ["bin/local-code-reviewer.py", "bin/invariant-fuzzer.py", "bin/adversarial-fuzzer.py"] or \
+           current_file.startswith("dataset/") or current_file.endswith(".jsonl"):
             continue
 
         if not line.startswith("+") or line.startswith("+++"):

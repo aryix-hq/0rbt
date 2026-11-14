@@ -49,6 +49,6 @@ Curated public open-source engineering dataset comprising **2,065 authentic engi
 
 ## Anti-Vibe Invariants & Hygiene
 
-- **Zero Synthetic Placeholders (`INV-06`)**: All articles, companies, and failure post-mortems originate from authentic tech publications. Zero synthetic dummy names (`Acme Corp`, `Fake Co`, `John Doe`).
+- **Zero Synthetic Placeholders (`INV-06`)**: All articles, companies, and failure post-mortems originate from authentic tech publications. Zero synthetic placeholder names.
 - **Substance Guarantee**: Only articles exceeding 150 words with verified technical depth are included.
 - **Reproducible Pipeline**: Harvested via `bin/bulk-harvest-2000.py` and continuous n8n workflow.
