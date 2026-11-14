@@ -1,77 +1,54 @@
----
-language:
-- en
-license: cdla-permissive-2.0
-task_categories:
-- question-answering
-- text-generation
-tags:
-- software-engineering
-- system-design
-- architecture
-- distributed-systems
-- postmortems
-- 0rbt
-size_categories:
-- 1K<n<10K
----
+# 0rbt Architecture Corpus & Instruction-Tuning Dataset (v1.0)
 
-# 🪐 0rbt: Curated Engineering Post-Mortems & Architectural Invariants Dataset
+Curated public open-source engineering dataset comprising **2,065 authentic engineering blog posts** and **5,869 architecture diagrams** harvested across premier technology engineering organizations.
 
-> **Repository**: [github.com/aryix-hq/0rbt](https://github.com/aryix-hq/0rbt)  
-> **Target Model**: `aryix/0rbt-architect`  
-> **License**: [CDLA-Permissive-2.0](https://cdla.dev/permissive-2-0/)  
-> **Curator**: 0rbt Open Source Community  
+## Dataset Structure
 
----
+- **`engineering_corpus_2000.jsonl`**: Complete tabular JSONL corpus containing raw substantive text, company metadata, domain categorization, word counts, and diagram links.
+- **`instruction_tuning_v1.jsonl`**: ChatML/Alpaca formatted instruction-tuning pairs for fine-tuning specialized reasoning models (`aryix/0rbt-architect`).
+- **`data/images/`**: Local cache of high-resolution system architecture diagrams and flowcharts (gitignored to preserve repository size).
 
-## 📖 Dataset Summary
+## Company Distribution
 
-The `0rbt` dataset contains real-world distributed systems dilemmas, outage root causes, production invariants, and architectural solutions synthesized from premier technology companies (Netflix, Stripe, Uber, Google, Meta, GitHub, Datadog, Cloudflare, AWS, etc.).
+| Company | Article Count |
+| :--- | :--- |
+| Datadog | 517 |
+| Cloudflare | 502 |
+| GitHub | 483 |
+| Shopify | 421 |
+| AWS | 106 |
+| Dropbox | 11 |
+| Meta | 11 |
+| Slack | 10 |
+| Google | 1 |
+| Netflix | 1 |
+| Stripe | 1 |
+| Uber | 1 |
 
-Unlike generic coding datasets that focus on syntax or leetcode puzzles, this dataset explicitly models **architectural decision-making, failure prevention, and downscale translation** ("Big Tech $\to$ Lean Startup").
+## Engineering Category Breakdown
 
----
+| Category | Count |
+| :--- | :--- |
+| Observability & Metric Aggregation | 1,632 |
+| Edge Compute & Distributed Systems | 325 |
+| Databases & Storage Systems | 73 |
+| Developer Infrastructure & CI/CD | 14 |
+| AI/ML Infrastructure | 5 |
+| Security & Cryptography | 5 |
+| Access Control & Global Security | 1 |
+| Caching & High-Throughput Storage | 1 |
+| Database Reliability & High Availability | 1 |
+| Distributed Storage & High Availability | 1 |
+| Edge Compute & Proxy Architecture | 1 |
+| Multi-Tenant Architecture & Resilience | 1 |
+| Observability & Distributed Tracing | 1 |
+| Payment Systems & Idempotency | 1 |
+| Real-Time Collaboration & Distributed Caching | 1 |
+| Real-Time Matching & Distributed Transactions | 1 |
+| Telemetry & Columnar Data Storage | 1 |
 
-## 🗂 Files & Splits
+## Anti-Vibe Invariants & Hygiene
 
-- `engineering_postmortems_v1.jsonl`: Full structured records with 16 architectural fields.
-- `instruction_tuning_v1.jsonl`: Formatted in Alpaca/ShareGPT format (`instruction`, `input`, `output`) ready for fine-tuning open-weights models (e.g. Qwen 2.5, Llama 3.1).
-
----
-
-## 📐 Data Fields
-
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| `id` | string | Unique 0rbt record ID (e.g. `0rbt-000001`) |
-| `company` | string | Engineering organization (e.g. `Netflix`, `Stripe`, `Uber`) |
-| `title` | string | Official article title |
-| `category` | string | Architecture domain (e.g. `Observability`, `Payment Systems`, `Ledgers`) |
-| `canonical_url` | string | Original published blog post URL |
-| `core_architectural_pattern` | string | Precise name of system design pattern |
-| `problem_statement` | string | Technical bottleneck or failure condition |
-| `solution_breakdown` | string | Step-by-step description of production implementation |
-| `system_invariants` | list | List of non-negotiable operational invariants |
-| `trade_offs` | string | Complexity, latency, or memory sacrifices incurred |
-| `big_tech_overkill` | string | Why copying this directly is dangerous for startups |
-| `small_scale_implementation` | string | Pragmatic alternative using Postgres, Redis, or simple workers |
-| `estimated_cost_savings` | string | Monthly savings vs enterprise SaaS |
-| `ai_agents_rule` | string | Production invariant rule for AI coding agents |
-
----
-
-## 🧪 Usage with Hugging Face `datasets`
-
-```python
-from datasets import load_dataset
-
-dataset = load_dataset("json", data_files="dataset/instruction_tuning_v1.jsonl")
-print(dataset[0])
-```
-
----
-
-## ⚖️ License & Attribution
-
-This dataset is distributed under the **Community Data License Agreement – Permissive – Version 2.0 (CDLA-Permissive-2.0)**. Article excerpts are summarized for transformative educational and research analysis under fair use.
+- **Zero Synthetic Placeholders (`INV-06`)**: All articles, companies, and failure post-mortems originate from authentic tech publications. Zero synthetic dummy names (`Acme Corp`, `Fake Co`, `John Doe`).
+- **Substance Guarantee**: Only articles exceeding 150 words with verified technical depth are included.
+- **Reproducible Pipeline**: Harvested via `bin/bulk-harvest-2000.py` and continuous n8n workflow.

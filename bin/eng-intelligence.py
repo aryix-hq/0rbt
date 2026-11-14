@@ -101,9 +101,21 @@ def init_database():
             FOREIGN KEY (learning_id) REFERENCES engineering_learnings(id) ON DELETE CASCADE
         );
 
+        CREATE TABLE IF NOT EXISTS article_images (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            article_hash TEXT NOT NULL,
+            image_url TEXT NOT NULL,
+            local_path TEXT,
+            file_size INTEGER,
+            alt_text TEXT,
+            downloaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (article_hash) REFERENCES processed_articles(article_hash) ON DELETE CASCADE
+        );
+
         CREATE INDEX IF NOT EXISTS idx_processed_url ON processed_articles(canonical_url);
         CREATE INDEX IF NOT EXISTS idx_learnings_hash ON engineering_learnings(article_hash);
         CREATE INDEX IF NOT EXISTS idx_embeddings_learning ON knowledge_embeddings(learning_id);
+        CREATE INDEX IF NOT EXISTS idx_images_hash ON article_images(article_hash);
         """)
     conn.close()
     print(f"✔ Database initialized successfully at: {DB_PATH}")
@@ -182,7 +194,74 @@ def cosine_similarity(v1: List[float], v2: List[float]) -> float:
     return dot / (mag1 * mag2)
 
 
-def fetch_clean_article(url: str) -> Tuple[str, str]:
+def extract_images_from_html(html: str, base_url: str) -> List[Dict[str, str]]:
+    """Extracts high-resolution images, architecture diagrams, and og:image from HTML."""
+    images = []
+    seen = set()
+
+    # 1. Match og:image metadata
+    og_m = re.search(r'<meta\b[^>]*property=["\']og:image["\'][^>]*content=["\']([^"\']+)["\']', html, re.IGNORECASE)
+    if not og_m:
+        og_m = re.search(r'<meta\b[^>]*content=["\']([^"\']+)["\'][^>]*property=["\']og:image["\']', html, re.IGNORECASE)
+    if og_m:
+        img_url = urllib.parse.urljoin(base_url, og_m.group(1).strip())
+        images.append({"url": img_url, "alt": "Cover Image"})
+        seen.add(img_url)
+
+    # 2. Match standard <img> tags
+    for img in re.finditer(r'<img\b([^>]*)>', html, re.IGNORECASE):
+        attrs = img.group(1)
+        src_m = re.search(r'\bsrc=["\']([^"\']+)["\']', attrs, re.IGNORECASE)
+        alt_m = re.search(r'\balt=["\']([^"\']*)["\']', attrs, re.IGNORECASE)
+        alt = alt_m.group(1).strip() if alt_m else ""
+
+        if src_m:
+            raw_src = src_m.group(1).strip()
+            if raw_src.startswith("data:") or raw_src.endswith((".svg", ".ico")):
+                continue
+            full_url = urllib.parse.urljoin(base_url, raw_src)
+            if full_url not in seen:
+                seen.add(full_url)
+                images.append({"url": full_url, "alt": alt})
+
+    return images
+
+
+def download_article_images(article_hash: str, images: List[Dict[str, str]], max_images: int = 5) -> List[Dict[str, Any]]:
+    """Downloads blog images and saves locally into data/images/<hash>/."""
+    img_dir = os.path.join(REPO_ROOT, "data", "images", article_hash)
+    os.makedirs(img_dir, exist_ok=True)
+    downloaded = []
+
+    headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"}
+    for idx, img in enumerate(images[:max_images]):
+        img_url = img["url"]
+        ext = os.path.splitext(urllib.parse.urlparse(img_url).path)[1].lower()
+        if not ext or len(ext) > 5 or ext not in [".png", ".jpg", ".jpeg", ".webp"]:
+            ext = ".png"
+        local_filename = f"diagram_{idx+1}{ext}"
+        local_path = os.path.join(img_dir, local_filename)
+
+        try:
+            req = urllib.request.Request(img_url, headers=headers)
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                content = resp.read()
+                if len(content) < 1000:  # Skip tracking pixels
+                    continue
+                with open(local_path, "wb") as f:
+                    f.write(content)
+                downloaded.append({
+                    "image_url": img_url,
+                    "local_path": os.path.relpath(local_path, REPO_ROOT),
+                    "file_size": len(content),
+                    "alt_text": img.get("alt", "")
+                })
+        except Exception:
+            continue
+    return downloaded
+
+
+def fetch_clean_article(url: str) -> Tuple[str, str, List[Dict[str, str]]]:
     headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"}
     req = urllib.request.Request(url, headers=headers)
     with urllib.request.urlopen(req, timeout=20) as resp:
@@ -193,11 +272,14 @@ def fetch_clean_article(url: str) -> Tuple[str, str]:
     title = title_match.group(1).strip() if title_match else "Engineering Architecture Article"
     title = re.sub(r'\s*[\-–|]\s*(Netflix|Stripe|Uber|Google|Shopify|GitHub).*$', '', title).strip()
 
+    # Extract images before stripping tags
+    images = extract_images_from_html(html, url)
+
     # Strip tags into clean text
     html_clean = re.sub(r'<(script|style|nav|header|footer|aside)\b[^<]*(?:(?!<\/\1>)<[^<]*)*<\/\1>', '', html, flags=re.IGNORECASE)
     text = re.sub(r'<[^>]+>', ' ', html_clean)
     text = re.sub(r'\s+', ' ', text).strip()
-    return title, text
+    return title, text, images
 
 
 def ingest_article(url: str, company: str = None, category: str = "Distributed Systems") -> Dict[str, Any]:
@@ -213,7 +295,7 @@ def ingest_article(url: str, company: str = None, category: str = "Distributed S
 
     print(f"📥 Fetching article from: {c_url}")
     try:
-        title, content = fetch_clean_article(url)
+        title, content, images = fetch_clean_article(url)
     except Exception as e:
         print(f"✘ Failed to fetch article: {e}")
         conn.close()
@@ -334,6 +416,17 @@ Return strictly valid JSON matching this schema:
             INSERT INTO knowledge_embeddings (learning_id, chunk_type, chunk_text, embedding_json)
             VALUES (?, 'summary', ?, ?)
             """, (learning_id, summary_for_embed, json.dumps(embedding)))
+
+        # Download and store diagrams/images
+        if images:
+            downloaded_imgs = download_article_images(h, images, max_images=5)
+            for dimg in downloaded_imgs:
+                conn.execute("""
+                INSERT INTO article_images (article_hash, image_url, local_path, file_size, alt_text)
+                VALUES (?, ?, ?, ?, ?)
+                """, (h, dimg["image_url"], dimg["local_path"], dimg["file_size"], dimg["alt_text"]))
+            if downloaded_imgs:
+                print(f"  🖼️ Downloaded {len(downloaded_imgs)} architecture images to data/images/{h[:8]}...")
 
     conn.close()
 

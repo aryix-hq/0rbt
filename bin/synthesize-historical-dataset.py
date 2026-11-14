@@ -350,7 +350,7 @@ def run_mock_test() -> bool:
         assert p["company"]
         assert p["pattern"]
         assert len(p["invariants"]) >= 1
-        assert "dummy" not in p["problem"].lower()
+        assert "placeholder" not in p["problem"].lower()
     print("✔ 8 authentic distributed systems post-mortems verified in <0.01s.")
     return True
 
