@@ -79,8 +79,64 @@ SOURCES = [
     {
         "company": "Dropbox",
         "category": "Distributed Storage & Sync Protocols",
+        "sitemaps": [
+            "https://dropbox.tech/sitemap.xml"
+        ],
         "feeds": [
             ("https://dropbox.tech/feed", "rss")
+        ]
+    },
+    {
+        "company": "Meta",
+        "category": "Distributed Systems & Systems Scale",
+        "sitemaps": [
+            "https://engineering.fb.com/sitemap-1.xml",
+            "https://engineering.fb.com/sitemap-2.xml"
+        ],
+        "feeds": [
+            ("https://engineering.fb.com/feed/", "rss")
+        ]
+    },
+    {
+        "company": "Etsy",
+        "category": "Continuous Deployment & DevEx",
+        "feeds": [
+            ("https://codeascraft.com/feed/atom/", "atom")
+        ]
+    },
+    {
+        "company": "GitLab",
+        "category": "DevSecOps & Remote Infrastructure",
+        "feeds": [
+            ("https://about.gitlab.com/atom.xml", "atom")
+        ]
+    },
+    {
+        "company": "Lyft",
+        "category": "Service Mesh & Envoy Routing",
+        "feeds": [
+            ("https://eng.lyft.com/feed", "rss")
+        ]
+    },
+    {
+        "company": "Spotify",
+        "category": "Audio Streaming & Platform DevEx",
+        "feeds": [
+            ("https://engineering.atspotify.com/feed/", "rss")
+        ]
+    },
+    {
+        "company": "Docker",
+        "category": "Containerization & Developer Workflow",
+        "feeds": [
+            ("https://www.docker.com/blog/category/engineering/feed/", "rss")
+        ]
+    },
+    {
+        "company": "Red Hat",
+        "category": "Linux Kernel & OpenShift Architecture",
+        "feeds": [
+            ("https://developers.redhat.com/blog/feed", "rss")
         ]
     },
     {
@@ -98,17 +154,11 @@ SOURCES = [
         ]
     },
     {
-        "company": "DoorDash",
-        "category": "Real-Time Logistics & Dispatch Systems",
-        "feeds": [
-            ("https://medium.com/feed/doordash-engineering", "rss")
-        ]
-    },
-    {
         "company": "Netflix",
         "category": "High-Scale Streaming & Systems",
         "feeds": [
-            ("https://netflixtechblog.com/feed", "rss")
+            ("https://netflixtechblog.com/feed", "rss"),
+            ("https://medium.com/feed/netflix-techblog", "rss")
         ]
     },
     {
@@ -122,25 +172,22 @@ SOURCES = [
         "company": "AWS",
         "category": "Cloud Architecture & Multi-AZ Infrastructure",
         "feeds": [
+            ("https://aws.amazon.com/blogs/aws/feed/", "rss"),
             ("https://aws.amazon.com/blogs/architecture/feed/", "rss"),
             ("https://aws.amazon.com/blogs/compute/feed/", "rss"),
             ("https://aws.amazon.com/blogs/database/feed/", "rss"),
             ("https://aws.amazon.com/blogs/security/feed/", "rss"),
-            ("https://aws.amazon.com/blogs/devops/feed/", "rss")
+            ("https://aws.amazon.com/blogs/devops/feed/", "rss"),
+            ("https://aws.amazon.com/blogs/containers/feed/", "rss"),
+            ("https://aws.amazon.com/blogs/storage/feed/", "rss")
         ]
     },
     {
         "company": "Google",
         "category": "Cloud & Distributed Systems",
         "feeds": [
-            ("https://developers.googleblog.com/feeds/posts/default", "atom")
-        ]
-    },
-    {
-        "company": "Meta",
-        "category": "Distributed Systems & Systems Scale",
-        "feeds": [
-            ("https://engineering.fb.com/feed/", "rss")
+            ("https://developers.googleblog.com/feeds/posts/default", "atom"),
+            ("https://cloud.google.com/blog/rss/", "rss")
         ]
     }
 ]
@@ -392,10 +439,10 @@ def process_single_article(url: str, company: str, category: str, db_file: str =
     }
 
 
-def collect_candidate_urls(sources: List[Dict[str, Any]], target_count: int = 3500) -> List[Tuple[str, str, str]]:
+def collect_candidate_urls(sources: List[Dict[str, Any]], target_count: int = 8000) -> List[Tuple[str, str, str]]:
     candidates = []
     seen_urls = set()
-    max_per_source = max(700, target_count // len(sources) + 200)
+    max_per_source = max(1400, target_count // len(sources) + 300)
 
     for s in sources:
         company = s["company"]
@@ -565,7 +612,7 @@ def run_bulk_harvest(target: int = 2000, workers: int = 16, db_file: str = DB_PA
         return
 
     print("\n🔍 Step 1: Discovering candidate URLs from sitemaps and feeds...")
-    candidates = collect_candidate_urls(SOURCES, target_count=max(target + 2000, 4000))
+    candidates = collect_candidate_urls(SOURCES, target_count=max(target + 3000, 8000))
     print(f"✔ Discovered {len(candidates)} candidate engineering articles.")
 
     print(f"\n⚡ Step 2: Ingesting articles and downloading architecture diagrams ({workers} workers)...")

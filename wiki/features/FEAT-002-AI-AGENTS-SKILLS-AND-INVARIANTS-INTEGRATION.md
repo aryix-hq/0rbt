@@ -15,7 +15,7 @@ Generalist coding LLMs (GPT-4o, Claude 3.5 Sonnet, vanilla Qwen 2.5) frequently 
 - Omitting client idempotency keys on payment and order endpoints (`INV-SEC-09`).
 - Using raw exponential backoff loops that trigger cascading thundering herds (`INV-RES-03`).
 - Placing heavy relational queries inside Kubernetes liveness probes (`INV-RES-02`).
-- Hardcoding static mock placeholders (`Acme Corp`, `foo`, `bar`) instead of domain-authentic logic.
+- Hardcoding static mock placeholders instead of domain-authentic logic.
 
 While `0rbt`'s corpus provides 2,065 real-world post-mortems and engineering blogs, raw text alone is descriptive rather than prescriptive. To transform `aryix/0rbt-architect` into an authoritative systems design and review assistant, we must integrate the prescriptive invariants and skills developed across the `ai-agents` ecosystem.
 
@@ -52,6 +52,6 @@ While `0rbt`'s corpus provides 2,065 real-world post-mortems and engineering blo
 - [ ] Require $\ge 90\%$ pass rate on detecting missing idempotency keys, unkeyed retries, liveness probe coupling, and tenant boundary leaks.
 
 ### D. Governance & Code Hygiene
-- [ ] Zero dummy/placeholder names (`INV-06`).
+- [ ] Zero fictional placeholder names (`INV-06`).
 - [ ] Zero cloud tokens ($0 tokens); all synthesis and evals run locally via Ollama.
 - [ ] Strict two-axis and local code reviewer approval before merge.
