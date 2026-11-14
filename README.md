@@ -103,12 +103,14 @@ flowchart TD
   4. **AI Invariant Rules**: Production invariant rules for agentic systems.
 
 ### Pillar 2: Curated Open Dataset
-* Thousands of structured distributed systems dilemmas, post-mortems, and downscale startup blueprints.
-* Formatted in clean Parquet and Alpaca/ShareGPT JSONL for research, retrieval, and fine-tuning.
+* **4,169 verified engineering articles** and **11,936 architecture diagrams** spanning 10+ years across 63 premier technology organizations.
+* **5,508 instruction-tuning pairs** (`dataset/instruction_tuning_v1.jsonl`) combining empirical post-mortems, 20 Anti-Vibe Invariants, and the complete 250+ `ai-agents` skills suite (including 78 Red Team offensive skills and 35 Bug Hunter validation gates).
+* Formatted in clean ChatML and tabular JSONL for research, retrieval, and fine-tuning.
 
 ### Pillar 3: The Specialized Model (`aryix/0rbt-architect`)
-* **Phase A (Ollama Modelfile)**: Bundled system persona, retrieval reasoning instructions, and 20 anti-vibe engineering invariants.
-* **Phase B (Fine-Tuned Adapter)**: Specialized LoRA adapter trained on synthetic failure diagnosis pairs, beating generalist models on system design benchmarks.
+* **Dual-Hat Architect & Red Team Persona**: Unified Staff Systems Architect and Adversarial Red Team Lead.
+* **Phase A (Ollama Modelfile)**: Bundled system persona, retrieval reasoning instructions, 20 anti-vibe engineering invariants, adversarial cloud/container exploit defense, and the 7-Question Validation Gate.
+* **Phase B (Fine-Tuned Adapter)**: Specialized LoRA adapter trained on failure diagnosis and penetration testing pairs.
 
 ---
 
