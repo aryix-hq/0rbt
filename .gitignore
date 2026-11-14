@@ -38,6 +38,3 @@ token_ledger.json
 active_feature.md
 rescue_buffer.json
 flight_recorder.jsonl
-
-wiki/*
-architecture.md
