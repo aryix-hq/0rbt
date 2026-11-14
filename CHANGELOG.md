@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- Implemented **0rbt Open-Source Launch, Public Dataset & `aryix/0rbt-architect` Model (PLAN-002, PRD)**:
+  - **Open-Source Repository Infrastructure**: Created Apache 2.0 `LICENSE`, contributor guides (`CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`), issue templates (`.github/ISSUE_TEMPLATE/`), and comprehensive `README.md` documenting architecture, quickstarts, and CLI operations.
+  - **Phase A Local Ollama Model (`aryix/0rbt-architect`)**: Created `Modelfile` embedding Staff Systems Architect reasoning, low temperature (0.2), and anti-vibe engineering invariants (`INV-RES-01..04`, `INV-SEC-09`). Automated build and verification via `bin/build-ollama-model.sh` running locally on Apple Silicon Metal GPU at $0 cloud tokens.
+  - **Phase B Fine-Tuning & Quantization Pipeline**: Implemented `training/train_lora.py` (4-bit QLoRA SFTTrainer with ChatML prompts) and `training/export_gguf.py` (LoRA adapter merge & GGUF quantization) with zero-token mock testing (`--mock-test`).
+  - **Public Dataset Curation & Exporter**: Built `bin/export-hf-dataset.py` exporting SQLite intelligence records to Hugging Face standard datasets (`dataset/engineering_postmortems_v1.jsonl` and `dataset/instruction_tuning_v1.jsonl`) with Hugging Face dataset card (`dataset/README.md`).
+  - **Historical Archive Crawler**: Built `bin/crawl-historical-archives.py` with multi-threaded sitemap extraction and Medium publication parsing.
+  - **Peanuts & Hay Leaf Contract**: Added `training/README.md` enforcing `INV-DOC-02` contracts.
 - Implemented **Autonomous Engineering Blog Intelligence Pipeline (FEAT-001, PLAN-001, ADR-001)**:
   - **Curated 60+ Source Registry**: Consolidated verified RSS, Atom, and Medium feed endpoints across 63 tier-1 technology organizations (Google, Netflix, Stripe, Uber, Meta, GitHub, Datadog, Cloudflare, etc.) into `config/engineering_blogs_registry.json`.
   - **Deterministic Canonical URL Deduplication**: Enforced `INV-BLOG-01` via SHA-256 hashing over normalized URLs (stripping query parameters, tracking tags, and protocol fragments) with PostgreSQL/Datatable persistence.
