@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- Implemented **AI-Agents Skills & Anti-Vibe Invariants Integration into aryix/0rbt-architect (FEAT-002, PLAN-003, ADR-016)**:
+  - **Deterministic Invariants Synthesizer**: Created `bin/synthesize-skills-dataset.py` synthesizing 550 high-signal instruction-tuning pairs derived from the 20 Anti-Vibe Invariants (`INV-SEC-01` to `INV-SEC-10`), SRE resilience doctrine (`INV-RES-01` to `INV-RES-05`), and multi-domain backend invariants.
+  - **Dataset Expansion & Unification**: Merged 550 invariant instruction pairs with the 2,065 empirical engineering post-mortem corpus, expanding `dataset/instruction_tuning_v1.jsonl` to **2,615 total ChatML pairs** alongside standalone `dataset/invariants_instruction_dataset.jsonl`.
+  - **Modelfile System Prompt Upgrade**: Refactored `Modelfile` with the compact Invariant Enforcement & Outage Defense rules matrix (<1,024 tokens) and standardized 4-part architectural review output protocol (Verdict, Violated Invariant, Big Tech Precedent, Hardened Code Fix). Rebuilt `aryix/0rbt-architect:latest` in local Ollama at $0 cloud tokens.
+  - **Automated Invariant Benchmark Suite**: Built `bin/eval-architect-invariants.py` evaluating 10 deterministic architectural dilemmas, achieving a verified **90.0% live pass rate** on `aryix/0rbt-architect` (catching missing idempotency keys, unkeyed retries, liveness probe coupling, and BOLA tenant leaks).
 - Implemented **0rbt Open-Source Launch, Public Dataset & `aryix/0rbt-architect` Model (PLAN-002, PRD)**:
   - **Open-Source Repository Infrastructure**: Created Apache 2.0 `LICENSE`, contributor guides (`CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`), issue templates (`.github/ISSUE_TEMPLATE/`), and comprehensive `README.md` documenting architecture, quickstarts, and CLI operations.
   - **Phase A Local Ollama Model (`aryix/0rbt-architect`)**: Created `Modelfile` embedding Staff Systems Architect reasoning, low temperature (0.2), and anti-vibe engineering invariants (`INV-RES-01..04`, `INV-SEC-09`). Automated build and verification via `bin/build-ollama-model.sh` running locally on Apple Silicon Metal GPU at $0 cloud tokens.
