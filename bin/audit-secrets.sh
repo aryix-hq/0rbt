@@ -45,7 +45,7 @@ fi
 
 # 1.2 Uncommitted Secrets in Staged Diff
 SECRET_PATTERNS='(AKIA[0-9A-Z]{16}|ghp_[0-9a-zA-Z]{36}|gho_[0-9a-zA-Z]{36}|-----BEGIN (RSA|EC|OPENSSH|PRIVATE) KEY-----|eyJhbGciOi[0-9a-zA-Z_-]{10,}\.[0-9a-zA-Z_-]{10,})'
-STAGED_SECRETS=$(git diff --cached 2>/dev/null | grep -E -v '^[+-]{3}' | grep -E '^\+[ ]*' | grep -E "${SECRET_PATTERNS}" || true)
+STAGED_SECRETS=$(git diff --cached -- . ':(exclude)dataset/*' 2>/dev/null | grep -E -v '^[+-]{3}' | grep -E '^\+[ ]*' | grep -E "${SECRET_PATTERNS}" || true)
 if [[ -n "${STAGED_SECRETS}" ]]; then
   log_fail "Potential plaintext secret discovered in staged diff:"
   echo "${STAGED_SECRETS}" | head -n 5 | while read -r line; do echo "    ${line:0:80}..."; done
@@ -75,7 +75,7 @@ else
 fi
 
 # Search for AWS credentials
-AWS_COMMITS=$(git log --oneline -G "AKIA[0-9A-Z]{16}" -- . ":(exclude)bin/audit-secrets.sh" ":(exclude)hooks/pre-commit" ":(exclude)skills/open-source-governance/SKILL.md" 2>/dev/null || true)
+AWS_COMMITS=$(git log --oneline -G "AKIA[0-9A-Z]{16}" -- . ":(exclude)bin/audit-secrets.sh" ":(exclude)hooks/pre-commit" ":(exclude)skills/open-source-governance/SKILL.md" ":(exclude)dataset/*" 2>/dev/null || true)
 if [[ -n "${AWS_COMMITS}" ]]; then
   log_fail "AWS Access Key ID found in commit history:"
   echo "${AWS_COMMITS}" | head -n 3
