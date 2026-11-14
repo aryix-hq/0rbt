@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# AI-AGENTS PRE-PUSH MULTI-PASS SECURITY & ANTI-VIBE GUARD (SEC-02 / RULE 1)
+# ==============================================================================
+# Intercepts all outgoing pushes and enforces:
+#   1. Cloudflare Multi-Pass Audit (origin leaks, gray clouds, Flexible SSL, local LLM)
+#   2. Engineering Manager Anti-Vibe Review (11 invariants, synthetic stubs, local LLM)
+#   3. Main Branch Protection Guard (Rule 1 mandate)
+#
+# Overrides (Emergency Hotfix Only):
+#   AI_AGENTS_ALLOW_MAIN_PUSH=1 git push origin main
+#   AI_AGENTS_ALLOW_INSECURE_PUSH=1 git push
+# ==============================================================================
+set -euo pipefail
+
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+BOLD='\033[1m'
+NC='\033[0m'
+
+if [[ "${AI_AGENTS_ALLOW_INSECURE_PUSH:-0}" != "1" ]]; then
+  # 1. CLOUDFLARE SECURITY AUDIT & ORIGIN PROTECTION GUARD (MULTI-PASS)
+  if [[ -f "bin/cloudflare-audit.py" ]]; then
+    python3 bin/cloudflare-audit.py --pre-push || exit 1
+  fi
+
+  # 2. ENGINEERING MANAGER ANTI-VIBE AUDIT (11 INVARIANTS & LOCAL LLM)
+  if [[ -f "bin/local-code-reviewer.py" ]]; then
+    python3 bin/local-code-reviewer.py --strict || exit 1
+  fi
+else
+  echo -e "${YELLOW}[SECURITY WARNING] Cloudflare and Anti-Vibe pre-push security audits bypassed via AI_AGENTS_ALLOW_INSECURE_PUSH=1${NC}"
+fi
+
+# 3. MAIN BRANCH PROTECTION GUARD
+if [[ "${AI_AGENTS_ALLOW_MAIN_PUSH:-0}" == "1" ]]; then
+  echo -e "${YELLOW}[SECURITY WARNING] Pre-push main branch guard bypassed via AI_AGENTS_ALLOW_MAIN_PUSH=1${NC}"
+  exit 0
+fi
+
+# Git passes ref info via standard input
+# Format: <local ref> <local sha> <remote ref> <remote sha>
+while read -r local_ref local_sha remote_ref remote_sha; do
+  TARGET_BRANCH="${remote_ref##*/}"
+  if [[ "${TARGET_BRANCH}" == "main" || "${TARGET_BRANCH}" == "master" ]]; then
+    echo -e "${RED}${BOLD}[SECURITY ERROR] Direct push to '${TARGET_BRANCH}' is blocked!${NC}"
+    echo -e "Rule 1 Mandate: 'main' is strictly protected. Zero direct pushes permitted."
+    echo -e "All production changes must originate from feature branches and merge via PR."
+    echo -e "\nTo proceed:"
+    echo -e "  1. Push to your feature branch: git push origin <branch-name>"
+    echo -e "  2. Open a Pull Request for Engineering Manager (EM) review"
+    exit 1
+  fi
+done
+
+exit 0

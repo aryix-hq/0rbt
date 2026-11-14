@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# AI-AGENTS PRE-COMMIT SECURITY & CONFIDENTIALITY GUARD (SEC-02)
+# ==============================================================================
+# Automatically verifies:
+#   1. Branch protection (blocks direct commits on main/master)
+#   2. Confidential file isolation (blocks DEF-*, INC-*, VULN-*, RES-*, .env)
+#   3. Deep secret scanning on staged code diffs
+#
+# Override (Emergency Only):
+#   AI_AGENTS_ALLOW_INSECURE_COMMIT=1 git commit -m "hotfix"
+# ==============================================================================
+set -euo pipefail
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+BOLD='\033[1m'
+NC='\033[0m'
+
+if [[ "${AI_AGENTS_ALLOW_INSECURE_COMMIT:-0}" == "1" ]]; then
+  echo -e "${YELLOW}[SECURITY WARNING] SEC-02 pre-commit check bypassed via AI_AGENTS_ALLOW_INSECURE_COMMIT=1${NC}"
+  exit 0
+fi
+
+# 1. BRANCH PROTECTION CHECK (Rule 1: Strict PR Mandate)
+CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
+if [[ "${CURRENT_BRANCH}" == "main" || "${CURRENT_BRANCH}" == "master" ]]; then
+  echo -e "${RED}${BOLD}[SECURITY ERROR] Direct commit to '${CURRENT_BRANCH}' is strictly prohibited!${NC}"
+  echo -e "Rule 1 Mandate: All changes must originate from feature branches (feat/*, fix/*, refactor/*)."
+  echo -e "Please switch to a branch:"
+  echo -e "  git checkout -b feat/<feature-name>"
+  echo -e "  git checkout -b fix/<bug-name>"
+  exit 1
+fi
+
+# 2. CONFIDENTIAL FILE ISOLATION CHECK
+CONFIDENTIAL_PATTERN='(wiki/(defects/DEF-|incidents/INC-|vulnerabilities/VULN-|research/RES-)[0-9A-Za-z_-]+\.md|\.env(\..+)?$|token_ledger\.json$|\.agents/memory/sessions/)'
+STAGED_CONFIDENTIAL=$(git diff --cached --name-only 2>/dev/null | grep -E "${CONFIDENTIAL_PATTERN}" || true)
+
+if [[ -n "${STAGED_CONFIDENTIAL}" ]]; then
+  echo -e "${RED}${BOLD}[SECURITY ERROR] Confidential internal artifact(s) staged for commit!${NC}"
+  echo -e "The following files contain private engineering / incident / token data and cannot be committed:"
+  echo "${STAGED_CONFIDENTIAL}" | while read -r f; do
+    echo -e "  ${RED}✖${NC} $f"
+  done
+  echo -e "\nPlease unstage these files before committing:"
+  echo -e "  git reset HEAD <file>"
+  echo -e "Ensure they match rules in .gitignore."
+  exit 1
+fi
+
+# 3. STAGED DIFF SECRET DETECTION SCAN
+# Patterns for high-entropy tokens, private keys, and credential strings
+KEY_PATTERN='-----BEGIN.*(RSA|EC|DSA|OPENSSH|PGP|ENCRYPTED|PRIVATE) KEY'
+TOKEN_PATTERN='(AKIA[0-9A-Z]{16}|gh[pousr]_[0-9a-zA-Z]{36}|github_pat_[0-9a-zA-Z_]{82}|sk_live_[0-9a-zA-Z]{24}|AIza[0-9A-Za-z\-_]{35}|xox[baprs]-[0-9a-zA-Z-]+)'
+
+STAGED_DIFF=$(git diff --cached -- . ":(exclude)bin/audit-secrets.sh" ":(exclude)hooks/pre-commit" 2>/dev/null || true)
+if [[ -n "${STAGED_DIFF}" ]]; then
+  # Check for private keys in added lines
+  LEAKED_KEYS=$(echo "${STAGED_DIFF}" | grep -E '^\+[ ]*' | grep -E -- "${KEY_PATTERN}" || true)
+  if [[ -n "${LEAKED_KEYS}" ]]; then
+    echo -e "${RED}${BOLD}[SECURITY ERROR] Private cryptographic key detected in staged commit!${NC}"
+    echo "${LEAKED_KEYS}" | head -n 3 | while read -r l; do echo -e "  ${RED}✖${NC} ${l:0:70}..."; done
+    echo -e "Do not commit private keys. Use HashiCorp Vault or environment injection."
+    exit 1
+  fi
+
+  # Check for API tokens in added lines
+  LEAKED_TOKENS=$(echo "${STAGED_DIFF}" | grep -E '^\+[ ]*' | grep -E -- "${TOKEN_PATTERN}" || true)
+  if [[ -n "${LEAKED_TOKENS}" ]]; then
+    echo -e "${RED}${BOLD}[SECURITY ERROR] Live API token or credential detected in staged commit!${NC}"
+    echo "${LEAKED_TOKENS}" | head -n 3 | while read -r l; do echo -e "  ${RED}✖${NC} ${l:0:70}..."; done
+    echo -e "Move secrets to .env or environment variables."
+    exit 1
+  fi
+fi
+
+exit 0

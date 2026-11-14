@@ -1,0 +1,1 @@
+.agents/rules/ui_ux_architecture_standards.md

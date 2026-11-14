@@ -1,0 +1,27 @@
+{
+  "projectId": "project-scaffold",
+  "version": "1.0.0",
+  "lastSessionReset": "2026-10-17T18:00:00Z",
+  "activeTicket": null,
+  "nodes": [
+    {
+      "id": "CORE-SYS",
+      "type": "component",
+      "name": "Core Application Server",
+      "status": "active",
+      "dependencies": []
+    },
+    {
+      "id": "CORE-DB",
+      "type": "database",
+      "name": "Relational Multi-Tenant Storage",
+      "status": "active",
+      "dependencies": ["CORE-SYS"]
+    }
+  ],
+  "edges": [
+    { "from": "CORE-SYS", "to": "CORE-DB", "relation": "persists_to" }
+  ],
+  "sessionHistory": []
+}
+

@@ -1,0 +1,45 @@
+# Git and GitHub metadata
+.git
+.gitignore
+
+# Autonomous Agent memory, vectors, and local logs
+.agents/memory/*.db
+.agents/memory/vector_store.db
+.agents/memory/*.sqlite
+.gemini/
+.vscode/
+
+# Node.js dependencies and build artifacts
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Python cache and virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Secrets, keys, and local environment files
+.env
+.env.*
+*.pem
+*.key
+*.cert
+*.crt
+id_rsa
+id_ed25519
+
+# Build outputs, logs, and temporary caches
+dist/
+build/
+out/
+tmp/
+temp/
+*.log
+.DS_Store
