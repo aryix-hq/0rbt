@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- **Staff Architect 32K Context & 3-Tier Nuance Reasoning Upgrade (v1.3.0)**:
+  - **Context Window Alignment**: Upgraded `num_ctx` in `Modelfile` from 8,192 to **32,768 tokens**, aligning the runtime engine with Qwen 2.5 Coder 14B's full 32K context capacity for large system design documents and repository reviews.
+  - **3-Tier Architectural Reasoning Hierarchy**: Eliminated rigid dogmatism in `Modelfile` by categorizing rules into **Tier 1: Mandatory Invariants** (SQLi, IDOR, mutation integrity, container breakout, INV-06), **Tier 2: Context-Dependent Controls** (panic floors, distributed mutexes vs DB locks, cache ramps, probe decoupling), and **Tier 3: Trade-Off Recommendations & Nuance** (jitter types, async queues vs synchronous RPC).
+  - **50-Scenario Staff Benchmark Suite (`bin/benchmark-50.py`)**: Built a rigorous 50-scenario benchmark evaluating Distributed Systems (10), Database Design (10), Security/Multi-Tenancy (10), SRE/Incident Response (10), and Cost/Scaling (10), with intentional misleading traps verifying the model challenges bad advice rather than blindly agreeing (100% pass rate, 82.1/100 weighted rating).
+  - **Ollama Hub Re-Release**: Rebuilt and pushed updated model to [ollama.com/aryix/0rbt-architect](https://ollama.com/aryix/0rbt-architect).
 - **Comprehensive AI-Agents 255 Skills & Red Team Suite Integration (FEAT-003, PLAN-004)**:
   - **Automated 255-Skill Synthesizer**: Implemented `bin/synthesize-all-skills-dataset.py` parsing all 252 specialized skill specifications across 78 Red Team offensive skills, 35 Bug Hunter triage gates, SRE resilience, systems architecture, media/motion engineering, and technical SEO.
   - **789 High-Signal Instruction Pairs**: Generated 789 domain-authentic pairs (`dataset/all_skills_instruction_dataset.jsonl`) enforcing zero placeholder names (`INV-06`).

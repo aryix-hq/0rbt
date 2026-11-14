@@ -52,7 +52,8 @@ def audit_diff_rules(diff_text: str) -> List[Dict[str, Any]]:
             "bin/adversarial-fuzzer.py",
             "bin/eval-architect-invariants.py",
             "bin/synthesize-skills-dataset.py",
-            "bin/synthesize-all-skills-dataset.py"
+            "bin/synthesize-all-skills-dataset.py",
+            "bin/benchmark-50.py"
         ] or current_file.startswith("dataset/") or current_file.startswith("wiki/") or current_file.endswith(".jsonl"):
             continue
 

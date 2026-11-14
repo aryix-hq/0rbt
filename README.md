@@ -167,16 +167,22 @@ Preventing double charges in payment systems due to transient network timeouts a
 
 ## 🧪 Testing & Invariant Verification
 
-`0rbt` enforces zero-mock regression testing across all invariant linters:
+`0rbt` enforces zero-mock regression testing across all invariant linters and architectural benchmarks:
 
 ```bash
-# 1. Test pipeline invariants & JSON schemas
+# 1. Run 50-Scenario Staff Architect Benchmark Suite (5 domains + intentional traps)
+python3 bin/benchmark-50.py --mock-test
+
+# 2. Run 15-Scenario Invariant & Red Team Evaluator
+python3 bin/eval-architect-invariants.py --mock-test
+
+# 3. Test pipeline invariants & JSON schemas
 python3 bin/test-blog-pipeline.py
 
-# 2. Run Google OSS-inspired Invariant Mutation Fuzzer (100% kill rate)
+# 4. Run Google OSS-inspired Invariant Mutation Fuzzer (100% kill rate)
 python3 bin/invariant-fuzzer.py --mock-test
 
-# 3. Run Two-Axis Code Reviewer (Standards vs Spec Isolation)
+# 5. Run Two-Axis Code Reviewer (Standards vs Spec Isolation)
 python3 bin/two-axis-reviewer.py --base main
 ```
 
