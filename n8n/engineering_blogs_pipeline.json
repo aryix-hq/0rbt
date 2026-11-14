@@ -20,23 +20,36 @@
     },
     {
       "parameters": {
+        "httpMethod": "POST",
+        "path": "ingest-blog",
+        "options": {}
+      },
+      "id": "18",
+      "name": "Webhook: Ingest Single Blog Post",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [100, 100],
+      "webhookId": "ingest-blog"
+    },
+    {
+      "parameters": {
         "filePath": "config/engineering_blogs_registry.json"
       },
       "id": "2",
       "name": "Read Feed Registry",
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
-      "position": [320, 300]
+      "position": [340, 300]
     },
     {
       "parameters": {
-        "jsCode": "// Parse registry and filter active blog sources\nconst raw = JSON.parse($input.first().json.data);\nconst activeSources = raw.sources.filter(s => s.active !== false);\nreturn activeSources.map(s => ({ json: s }));"
+        "jsCode": "// Parse registry and return active sources\nconst raw = JSON.parse($input.first().json.data);\nconst activeSources = raw.sources.filter(s => s.active !== false);\nreturn activeSources.map(s => ({ json: s }));"
       },
       "id": "3",
       "name": "Parse & Filter Active Sources",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [540, 300]
+      "position": [560, 300]
     },
     {
       "parameters": {
@@ -54,51 +67,22 @@
       "name": "Fetch Feed Items",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [760, 300],
+      "position": [780, 300],
       "continueOnFail": true
     },
     {
       "parameters": {
-        "jsCode": "// Normalizes RSS/Atom/XML payload into uniform article items and generates deterministic SHA256 canonical hash\nconst crypto = require('crypto');\nconst source = $('Parse & Filter Active Sources').item.json;\nconst feedData = $input.first().json.data || $input.first().json;\n\nfunction canonicalize(url) {\n  if (!url) return '';\n  try {\n    const parsed = new URL(url.trim());\n    parsed.search = '';\n    parsed.hash = '';\n    return parsed.toString().toLowerCase().replace(/\\/$/, '');\n  } catch (e) {\n    return url.split('?')[0].split('#')[0].trim().toLowerCase();\n  }\n}\n\n// Support both raw XML strings and pre-parsed feed objects\nlet items = [];\nif (Array.isArray(feedData.items)) {\n  items = feedData.items;\n} else if (feedData.rss && feedData.rss.channel && feedData.rss.channel.item) {\n  items = Array.isArray(feedData.rss.channel.item) ? feedData.rss.channel.item : [feedData.rss.channel.item];\n} else if (feedData.feed && feedData.feed.entry) {\n  items = Array.isArray(feedData.feed.entry) ? feedData.feed.entry : [feedData.feed.entry];\n} else {\n  items = [];\n}\n\nreturn items.slice(0, 5).map(item => {\n  const rawUrl = item.link || (item.link && item.link['@_href']) || item.guid || item.id || '';\n  const canonicalUrl = canonicalize(rawUrl);\n  const hash = crypto.createHash('sha256').update(canonicalUrl).digest('hex');\n  const title = (item.title && typeof item.title === 'string' ? item.title : (item.title && item.title['#text']) || '').trim();\n  const pubDate = item.pubDate || item.published || item.updated || new Date().toISOString();\n  const snippet = item.description || item.summary || item.content || '';\n\n  return {\n    json: {\n      source_id: source.id,\n      company: source.company,\n      category: source.category,\n      title,\n      raw_url: rawUrl,\n      canonical_url: canonicalUrl,\n      article_hash: hash,\n      pub_date: pubDate,\n      snippet: typeof snippet === 'string' ? snippet.slice(0, 2000) : ''\n    }\n  };\n});"
+        "jsCode": "// Normalizes RSS/Atom/XML payload into uniform article items and generates deterministic SHA256 canonical hash\nconst crypto = require('crypto');\nconst source = $('Parse & Filter Active Sources').item.json;\nconst feedData = $input.first().json.data || $input.first().json;\n\nfunction canonicalize(url) {\n  if (!url) return '';\n  try {\n    const parsed = new URL(url.trim());\n    parsed.search = '';\n    parsed.hash = '';\n    return parsed.toString().toLowerCase().replace(/\\/$/, '');\n  } catch (e) {\n    return url.split('?')[0].split('#')[0].trim().toLowerCase();\n  }\n}\n\nlet items = [];\nif (Array.isArray(feedData.items)) {\n  items = feedData.items;\n} else if (feedData.rss && feedData.rss.channel && feedData.rss.channel.item) {\n  items = Array.isArray(feedData.rss.channel.item) ? feedData.rss.channel.item : [feedData.rss.channel.item];\n} else if (feedData.feed && feedData.feed.entry) {\n  items = Array.isArray(feedData.feed.entry) ? feedData.feed.entry : [feedData.feed.entry];\n} else {\n  items = [];\n}\n\nreturn items.slice(0, 5).map(item => {\n  const rawUrl = item.link || (item.link && item.link['@_href']) || item.guid || item.id || '';\n  const canonicalUrl = canonicalize(rawUrl);\n  const hash = crypto.createHash('sha256').update(canonicalUrl).digest('hex');\n  const title = (item.title && typeof item.title === 'string' ? item.title : (item.title && item.title['#text']) || '').trim();\n  const pubDate = item.pubDate || item.published || item.updated || new Date().toISOString();\n  const snippet = item.description || item.summary || item.content || '';\n\n  return {\n    json: {\n      source_id: source.id,\n      company: source.company,\n      category: source.category,\n      title,\n      raw_url: rawUrl,\n      canonical_url: canonicalUrl,\n      article_hash: hash,\n      pub_date: pubDate,\n      snippet: typeof snippet === 'string' ? snippet.slice(0, 2000) : ''\n    }\n  };\n});"
       },
       "id": "5",
       "name": "Canonicalize & Hash Articles",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [980, 300]
+      "position": [1000, 300]
     },
     {
       "parameters": {
-        "operation": "executeQuery",
-        "query": "CREATE TABLE IF NOT EXISTS processed_articles (\n  article_hash VARCHAR(64) PRIMARY KEY,\n  canonical_url TEXT NOT NULL,\n  company VARCHAR(100),\n  title TEXT,\n  processed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n);\nSELECT 1 FROM processed_articles WHERE article_hash = '{{ $json.article_hash }}' LIMIT 1;"
-      },
-      "id": "6",
-      "name": "Check Deduplication Store",
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.5,
-      "position": [1200, 300],
-      "continueOnFail": true
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "boolean": [
-            {
-              "value1": "={{ $json.length === 0 || !$json[0] }}",
-              "value2": true
-            }
-          ]
-        }
-      },
-      "id": "7",
-      "name": "Is Net-New Article?",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
-      "position": [1420, 300]
-    },
-    {
-      "parameters": {
-        "url": "={{ $('Canonicalize & Hash Articles').item.json.canonical_url }}",
+        "url": "={{ $json.canonical_url }}",
         "options": {
           "timeout": 20000
         }
@@ -107,18 +91,18 @@
       "name": "Fetch Full Article HTML",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1640, 200],
+      "position": [1220, 300],
       "continueOnFail": true
     },
     {
       "parameters": {
-        "jsCode": "// Sanitizes HTML: strips navigations, scripts, styles, headers, and extracts clean markdown body\nconst item = $('Canonicalize & Hash Articles').item.json;\nlet html = $input.first().json.data || '';\n\n// Basic RegEx cleaner for article body extraction when Readability is offline\nhtml = html.replace(/<script\\b[^<]*(?:(?!<\\/script>)<[^<]*)*<\\/script>/gi, '');\nhtml = html.replace(/<style\\b[^<]*(?:(?!<\\/style>)<[^<]*)*<\\/style>/gi, '');\nhtml = html.replace(/<nav\\b[^<]*(?:(?!<\\/nav>)<[^<]*)*<\\/nav>/gi, '');\nhtml = html.replace(/<footer\\b[^<]*(?:(?!<\\/footer>)<[^<]*)*<\\/footer>/gi, '');\nhtml = html.replace(/<header\\b[^<]*(?:(?!<\\/header>)<[^<]*)*<\\/header>/gi, '');\n\n// Strip remaining HTML tags into clean paragraph lines\nlet text = html.replace(/<[^>]+>/g, ' ').replace(/\\s+/g, ' ').trim();\n\n// Fallback to snippet if text is too short or blocked by paywall/cookie wall\nif (text.length < 300 && item.snippet) {\n  text = item.snippet.replace(/<[^>]+>/g, ' ');\n}\n\n// Enforce substance gate (INV-BLOG-02)\nconst wordCount = text.split(/\\s+/).length;\nconst isSubstantive = wordCount >= 200;\n\nreturn [{\n  json: {\n    ...item,\n    word_count: wordCount,\n    is_substantive: isSubstantive,\n    clean_content: text.slice(0, 15000)\n  }\n}];"
+        "jsCode": "// Sanitizes HTML and enforces 200-word substance threshold\nconst item = $('Canonicalize & Hash Articles').item.json;\nlet html = $input.first().json.data || '';\n\nhtml = html.replace(/<script\\b[^<]*(?:(?!<\\/script>)<[^<]*)*<\\/script>/gi, '');\nhtml = html.replace(/<style\\b[^<]*(?:(?!<\\/style>)<[^<]*)*<\\/style>/gi, '');\nhtml = html.replace(/<nav\\b[^<]*(?:(?!<\\/nav>)<[^<]*)*<\\/nav>/gi, '');\nhtml = html.replace(/<footer\\b[^<]*(?:(?!<\\/footer>)<[^<]*)*<\\/footer>/gi, '');\nhtml = html.replace(/<header\\b[^<]*(?:(?!<\\/header>)<[^<]*)*<\\/header>/gi, '');\n\nlet text = html.replace(/<[^>]+>/g, ' ').replace(/\\s+/g, ' ').trim();\nif (text.length < 300 && item.snippet) {\n  text = item.snippet.replace(/<[^>]+>/g, ' ');\n}\n\nconst wordCount = text.split(/\\s+/).length;\nconst isSubstantive = wordCount >= 200;\n\nreturn [{\n  json: {\n    ...item,\n    word_count: wordCount,\n    is_substantive: isSubstantive,\n    clean_content: text.slice(0, 10000)\n  }\n}];"
       },
       "id": "9",
       "name": "Clean Content & Substance Gate",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1860, 200]
+      "position": [1440, 300]
     },
     {
       "parameters": {
@@ -135,68 +119,45 @@
       "name": "Passes Substance Gate?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [2080, 200]
+      "position": [1660, 300]
     },
     {
       "parameters": {
-        "prompt": "=You are an expert Principal Distributed Systems Architect and Technical Ghostwriter for high-scale CTOs.\n\nAnalyze the following engineering blog post from {{ $json.company }}:\nTitle: {{ $json.title }}\nDomain: {{ $json.category }}\nURL: {{ $json.canonical_url }}\n\nArticle Content:\n{{ $json.clean_content }}\n\nExecute a 4-Dimensional Synthesis and return strictly valid JSON matching this schema:\n{\n  \"dimension_1_linkedin\": {\n    \"hook_1_counterintuitive\": \"Contrarian insight breaking an engineering myth (1-2 sentences with emoji)\",\n    \"hook_2_story\": \"Narrative breakdown hook detailing the high-stakes failure and solution\",\n    \"hook_3_practical\": \"Tactical takeaway hook for senior engineers and engineering managers\",\n    \"post_body\": \"Structured LinkedIn post (150-250 words) with clear whitespace, bulleted problem/solution breakdown, and discussion question\",\n    \"carousel_slides\": [\n      {\"slide\": 1, \"title\": \"The Bottleneck\", \"takeaway\": \"Core bottleneck or failure\"},\n      {\"slide\": 2, \"title\": \"The False Assumption\", \"takeaway\": \"Why conventional architecture failed\"},\n      {\"slide\": 3, \"title\": \"The Production Fix\", \"takeaway\": \"How they resolved it at scale\"},\n      {\"slide\": 4, \"title\": \"Key Rule\", \"takeaway\": \"Actionable engineering takeaway\"}\n    ],\n    \"hashtags\": [\"#SoftwareEngineering\", \"#SystemDesign\", \"#CloudArchitecture\"]\n  },\n  \"dimension_2_engineering_learnings\": {\n    \"core_architectural_pattern\": \"Precise technical name of pattern (e.g. Distributed Saga, Tail-Based Sampling)\",\n    \"problem_statement\": \"Exact root problem or operational limit\",\n    \"solution_breakdown\": \"Step-by-step description of technical implementation\",\n    \"system_invariants\": [\"Invariant 1\", \"Invariant 2\"],\n    \"trade_offs\": \"What they sacrificed (complexity, memory, eventual consistency)\"\n  },\n  \"dimension_3_small_scale_client_playbook\": {\n    \"big_tech_overkill\": \"Why copying this directly is dangerous for a 5-50 engineer team\",\n    \"small_scale_implementation\": \"How to get 80% of the benefit using Postgres, Redis, or simple background workers\",\n    \"estimated_cost_savings\": \"Estimated monthly savings vs enterprise SaaS/microservices\",\n    \"actionable_checklist\": [\"Step 1\", \"Step 2\", \"Step 3\"]\n  },\n  \"dimension_4_ai_agents_codebase_evolution\": {\n    \"applicable_agents_or_skills\": [\"devops-sre\", \"database-architect\"],\n    \"proposed_enhancement\": \"Concrete improvement to an ai-agents skill, rule, or script\",\n    \"code_or_rule_proposal\": \"INV-XXX: Rule name and specification\"\n  }\n}",
+        "method": "POST",
+        "url": "http://host.docker.internal:11434/api/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"qwen2.5-coder:14b\",\n  \"prompt\": \"You are a Principal Distributed Systems Architect and Technical Writer.\\nAnalyze this engineering blog article:\\nCompany: {{ $json.company }}\\nTitle: {{ $json.title }}\\nURL: {{ $json.canonical_url }}\\n\\nContent:\\n{{ $json.clean_content.slice(0, 6000) }}\\n\\nReturn strictly valid JSON:\\n{\\n  \\\"dimension_1_linkedin\\\": {\\n    \\\"hook_1_counterintuitive\\\": \\\"Contrarian insight breaking a myth\\\",\\n    \\\"hook_2_story\\\": \\\"Narrative hook on failure and re-architecture\\\",\\n    \\\"hook_3_practical\\\": \\\"Tactical takeaway for senior engineers\\\",\\n    \\\"post_body\\\": \\\"Structured LinkedIn post breakdown\\\",\\n    \\\"carousel_slides\\\": [\\n      {\\\"slide\\\": 1, \\\"title\\\": \\\"The Bottleneck\\\", \\\"takeaway\\\": \\\"Core bottleneck\\\"},\\n      {\\\"slide\\\": 2, \\\"title\\\": \\\"The Fix\\\", \\\"takeaway\\\": \\\"Production resolution\\\"}\\n    ]\\n  },\\n  \\\"dimension_2_engineering_learnings\\\": {\\n    \\\"core_architectural_pattern\\\": \\\"Pattern name\\\",\\n    \\\"problem_statement\\\": \\\"Exact root problem\\\",\\n    \\\"solution_breakdown\\\": \\\"Technical implementation\\\",\\n    \\\"system_invariants\\\": [\\\"Invariant 1\\\", \\\"Invariant 2\\\"],\\n    \\\"trade_offs\\\": \\\"Trade-offs incurred\\\"\\n  },\\n  \\\"dimension_3_small_scale_client_playbook\\\": {\\n    \\\"big_tech_overkill\\\": \\\"Why not to copy this blindly\\\",\\n    \\\"small_scale_implementation\\\": \\\"Pragmatic alternative for 1-50 engineers\\\",\\n    \\\"estimated_cost_savings\\\": \\\"Savings vs enterprise microservices\\\",\\n    \\\"actionable_checklist\\\": [\\\"Step 1\\\", \\\"Step 2\\\"]\\n  },\\n  \\\"dimension_4_ai_agents_codebase_evolution\\\": {\\n    \\\"applicable_agents_or_skills\\\": [\\\"devops-sre\\\"],\\n    \\\"proposed_enhancement\\\": \\\"Improvement to skill\\\",\\n    \\\"code_or_rule_proposal\\\": \\\"INV-RULE: Rule specification\\\"\\n  }\\n}\",\n  \"stream\": false,\n  \"format\": \"json\",\n  \"options\": {\n    \"temperature\": 0.2\n  }\n}",
         "options": {
-          "temperature": 0.2
+          "timeout": 120000
         }
       },
       "id": "11",
-      "name": "4D AI Synthesis Engine",
-      "type": "@n8n/n8n-nodes-langchain.chainLlm",
-      "typeVersion": 1.4,
-      "position": [2300, 200]
+      "name": "Ollama Local LLM Synthesis (qwen2.5-coder:14b)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1880, 200]
     },
     {
       "parameters": {
-        "jsCode": "// Parse LLM JSON output and merge with metadata\nconst rawOutput = $input.first().json.text || $input.first().json.response || $input.first().json;\nlet parsed = {};\ntry {\n  parsed = typeof rawOutput === 'string' ? JSON.parse(rawOutput.replace(/```json\\n?|```/g, '').trim()) : rawOutput;\n} catch (e) {\n  parsed = { parse_error: true, raw: String(rawOutput) };\n}\n\nconst meta = $('Clean Content & Substance Gate').item.json;\nreturn [{\n  json: {\n    ...meta,\n    synthesis: parsed,\n    synthesized_at: new Date().toISOString()\n  }\n}];"
+        "jsCode": "// Parse Ollama JSON response\nconst meta = $('Clean Content & Substance Gate').item.json;\nconst res = $input.first().json;\nlet synthesis = {};\ntry {\n  synthesis = typeof res.response === 'string' ? JSON.parse(res.response) : res.response;\n} catch (e) {\n  synthesis = { raw: res.response, error: e.message };\n}\n\nreturn [{\n  json: {\n    ...meta,\n    synthesis,\n    synthesized_at: new Date().toISOString()\n  }\n}];"
       },
       "id": "12",
-      "name": "Parse Synthesis JSON",
+      "name": "Parse Ollama JSON",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2520, 200]
+      "position": [2100, 200]
     },
     {
       "parameters": {
-        "operation": "executeQuery",
-        "query": "INSERT INTO processed_articles (article_hash, canonical_url, company, title) VALUES ('{{ $json.article_hash }}', '{{ $json.canonical_url }}', '{{ $json.company }}', '{{ $json.title.replace(/'/g, \"''\") }}') ON CONFLICT (article_hash) DO NOTHING;"
-      },
-      "id": "13",
-      "name": "Record Article As Processed",
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.5,
-      "position": [2740, 200],
-      "continueOnFail": true
-    },
-    {
-      "parameters": {
-        "chatId": "={{ $credentials.telegramChatId || '-1001234567890' }}",
-        "text": "=🚀 *New Tech Blog Breakdown: {{ $json.company }}*\n\n📌 *{{ $json.title }}*\n🔗 [Read Original Article]({{ $json.canonical_url }})\n\n💡 *Hook 1 (Counter-Intuitive)*:\n\"{{ $json.synthesis.dimension_1_linkedin.hook_1_counterintuitive }}\"\n\n📖 *Hook 2 (Story)*:\n\"{{ $json.synthesis.dimension_1_linkedin.hook_2_story }}\"\n\n🛠 *Small-Scale Client Alternative*:\n{{ $json.synthesis.dimension_3_small_scale_client_playbook.small_scale_implementation }}\n\n🤖 *ai-agents Evolution Proposal*:\n{{ $json.synthesis.dimension_4_ai_agents_codebase_evolution.code_or_rule_proposal }}",
-        "additionalFields": {
-          "parse_mode": "Markdown"
-        }
-      },
-      "id": "14",
-      "name": "Send Telegram Review Card",
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [2960, 100],
-      "continueOnFail": true
-    },
-    {
-      "parameters": {
-        "filePath": "=wiki/learnings/{{ $json.article_hash }}.md",
-        "fileContent": "=# {{ $json.company }}: {{ $json.title }}\n\n> **Canonical URL**: {{ $json.canonical_url }}  \n> **Category**: {{ $json.category }}  \n> **Published Date**: {{ $json.pub_date }}  \n> **Ingested**: {{ $json.synthesized_at }}  \n\n---\n\n## 1. Executive Technical Summary\n- **Pattern**: {{ $json.synthesis.dimension_2_engineering_learnings.core_architectural_pattern }}\n- **Problem**: {{ $json.synthesis.dimension_2_engineering_learnings.problem_statement }}\n- **Solution**: {{ $json.synthesis.dimension_2_engineering_learnings.solution_breakdown }}\n- **Trade-offs**: {{ $json.synthesis.dimension_2_engineering_learnings.trade_offs }}\n\n---\n\n## 2. Small-Scale Client Architecture Blueprint\n- **Big Tech Overkill Warning**: {{ $json.synthesis.dimension_3_small_scale_client_playbook.big_tech_overkill }}\n- **Pragmatic Implementation**: {{ $json.synthesis.dimension_3_small_scale_client_playbook.small_scale_implementation }}\n- **Estimated Savings**: {{ $json.synthesis.dimension_3_small_scale_client_playbook.estimated_cost_savings }}\n\n---\n\n## 3. LinkedIn Content Drafts\n### Hook 1: Contrarian\n> {{ $json.synthesis.dimension_1_linkedin.hook_1_counterintuitive }}\n\n### Hook 2: Narrative\n> {{ $json.synthesis.dimension_1_linkedin.hook_2_story }}\n\n### Post Body\n```markdown\n{{ $json.synthesis.dimension_1_linkedin.post_body }}\n```\n\n---\n\n## 4. ai-agents Codebase Evolution\n- **Target Skills**: {{ $json.synthesis.dimension_4_ai_agents_codebase_evolution.applicable_agents_or_skills.join(', ') }}\n- **Proposed Rule**: `{{ $json.synthesis.dimension_4_ai_agents_codebase_evolution.code_or_rule_proposal }}`\n"
+        "filePath": "=wiki/learnings/{{ $json.company.toLowerCase() }}-{{ $json.article_hash.slice(0, 8) }}.md",
+        "fileContent": "=# {{ $json.company }}: {{ $json.title }}\n\n> **Canonical URL**: {{ $json.canonical_url }}  \n> **Category**: {{ $json.category }}  \n> **Hash**: `{{ $json.article_hash }}`  \n> **Ingested**: {{ $json.synthesized_at }}  \n\n---\n\n## 1. Executive Technical Summary\n- **Pattern**: {{ $json.synthesis.dimension_2_engineering_learnings.core_architectural_pattern }}\n- **Problem**: {{ $json.synthesis.dimension_2_engineering_learnings.problem_statement }}\n- **Solution**: {{ $json.synthesis.dimension_2_engineering_learnings.solution_breakdown }}\n- **Trade-offs**: {{ $json.synthesis.dimension_2_engineering_learnings.trade_offs }}\n\n---\n\n## 2. Small-Scale Client Architecture Blueprint\n- **Big Tech Overkill Warning**: {{ $json.synthesis.dimension_3_small_scale_client_playbook.big_tech_overkill }}\n- **Pragmatic Implementation**: {{ $json.synthesis.dimension_3_small_scale_client_playbook.small_scale_implementation }}\n- **Estimated Savings**: {{ $json.synthesis.dimension_3_small_scale_client_playbook.estimated_cost_savings }}\n\n---\n\n## 3. LinkedIn Content Drafts\n### Hook 1: Contrarian\n> {{ $json.synthesis.dimension_1_linkedin.hook_1_counterintuitive }}\n\n### Hook 2: Narrative\n> {{ $json.synthesis.dimension_1_linkedin.hook_2_story }}\n\n### Post Body\n```markdown\n{{ $json.synthesis.dimension_1_linkedin.post_body }}\n```\n\n---\n\n## 4. ai-agents Codebase Evolution\n- **Target Skills**: {{ $json.synthesis.dimension_4_ai_agents_codebase_evolution.applicable_agents_or_skills }}\n- **Proposed Rule**: `{{ $json.synthesis.dimension_4_ai_agents_codebase_evolution.code_or_rule_proposal }}`\n"
       },
       "id": "15",
       "name": "Write Learning Markdown to Wiki",
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
-      "position": [2960, 300]
+      "position": [2320, 200]
     },
     {
       "parameters": {},
@@ -205,20 +166,6 @@
       "type": "n8n-nodes-base.errorTrigger",
       "typeVersion": 1,
       "position": [100, 600]
-    },
-    {
-      "parameters": {
-        "chatId": "={{ $credentials.telegramChatId || '-1001234567890' }}",
-        "text": "=🚨 *n8n Pipeline Error Alert*\n\nWorkflow: *{{ $json.workflow.name }}*\nFailed Node: *{{ $json.execution.lastNodeExecuted }}*\nError: `{{ $json.execution.error.message }}`",
-        "additionalFields": {
-          "parse_mode": "Markdown"
-        }
-      },
-      "id": "17",
-      "name": "Send Error Alert",
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [320, 600]
     }
   ],
   "connections": {
@@ -270,28 +217,6 @@
       "main": [
         [
           {
-            "node": "Check Deduplication Store",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Check Deduplication Store": {
-      "main": [
-        [
-          {
-            "node": "Is Net-New Article?",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Is Net-New Article?": {
-      "main": [
-        [
-          {
             "node": "Fetch Full Article HTML",
             "type": "main",
             "index": 0
@@ -325,56 +250,29 @@
       "main": [
         [
           {
-            "node": "4D AI Synthesis Engine",
+            "node": "Ollama Local LLM Synthesis (qwen2.5-coder:14b)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "4D AI Synthesis Engine": {
+    "Ollama Local LLM Synthesis (qwen2.5-coder:14b)": {
       "main": [
         [
           {
-            "node": "Parse Synthesis JSON",
+            "node": "Parse Ollama JSON",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Parse Synthesis JSON": {
+    "Parse Ollama JSON": {
       "main": [
         [
-          {
-            "node": "Record Article As Processed",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Record Article As Processed": {
-      "main": [
-        [
-          {
-            "node": "Send Telegram Review Card",
-            "type": "main",
-            "index": 0
-          },
           {
             "node": "Write Learning Markdown to Wiki",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Global Error Trigger": {
-      "main": [
-        [
-          {
-            "node": "Send Error Alert",
             "type": "main",
             "index": 0
           }

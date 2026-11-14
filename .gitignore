@@ -1,0 +1,26 @@
+# Environments & secrets
+.env*
+!.env.example
+
+# Local SQLite databases & vector stores
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+data/*.db
+data/*.db-*
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Node / n8n
+node_modules/
+.npm/
+
+# IDE & OS
+.DS_Store
+.vscode/*
+!.vscode/settings.json
