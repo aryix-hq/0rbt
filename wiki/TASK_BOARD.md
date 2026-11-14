@@ -10,6 +10,7 @@
 
 ## Stage 3: Phased Project Planning
 - [x] `PLAN-001`: Autonomous Engineering Blog Intelligence Pipeline (Planning Trio: `@product-manager`, `@architect`, `@project-manager`)
+- [ ] `PLAN-002`: Open-Source Launch, 2,000+ Post-Mortem Dataset & 0rbt/architect Model Release (Planning Trio: `@product-manager`, `@architect`, `@project-manager`)
 
 ## Stage 4: Active Execution & Verification
 - [x] `PLAN-001` / `FEAT-001`: Phase 1 - Blog Registry & ADR definition (`config/engineering_blogs_registry.json`, `wiki/adr/ADR-001.md`)
