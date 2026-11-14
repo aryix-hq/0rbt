@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- **Comprehensive AI-Agents 255 Skills & Red Team Suite Integration (FEAT-003, PLAN-004)**:
+  - **Automated 255-Skill Synthesizer**: Implemented `bin/synthesize-all-skills-dataset.py` parsing all 252 specialized skill specifications across 78 Red Team offensive skills, 35 Bug Hunter triage gates, SRE resilience, systems architecture, media/motion engineering, and technical SEO.
+  - **789 High-Signal Instruction Pairs**: Generated 789 domain-authentic pairs (`dataset/all_skills_instruction_dataset.jsonl`) enforcing zero placeholder names (`INV-06`).
+  - **Master Dataset Expansion**: Unified master dataset `dataset/instruction_tuning_v1.jsonl` to **5,508 total ChatML instruction pairs** (combining 4,169 blog post-mortems, 550 Anti-Vibe Invariants, and 789 skill pairs).
+  - **Modelfile Dual-Hat Evolution**: Upgraded `Modelfile` to embed the Dual-Hat Principal Systems Architect & Adversarial Red Team Lead persona, incorporating container breakout defense, protocol desynchronization, and the 7-Question Validation Gate in under 800 tokens. Rebuilt `aryix/0rbt-architect` locally on Metal GPU at $0 cloud tokens.
+  - **Expanded Invariant Benchmark Suite**: Added TC-11 through TC-15 covering container socket escapes, cloud metadata SSRF, untrusted deserialization, HTTP request smuggling, and prompt injection defense, achieving a verified **15/15 (100.0%)** pass rate.
 - **10-Year Historical Engineering Corpus & Diagram Archive (FEAT-002, PLAN-003)**:
   - **Massive 10-Year Historical Crawl**: Enhanced candidate harvesting in `bin/bulk-harvest-2000.py` to traverse child sitemaps and archives spanning 2012–2026 across Cloudflare, Datadog, GitHub, Meta, Shopify, AWS, Dropbox, GitLab, Docker, Red Hat, Netflix, and Google.
   - **4,169 Authentic Engineering Articles**: Extracted, cleaned, and categorized 4,169 substantive technical posts in `data/engineering_intelligence.db` and `dataset/engineering_corpus_2000.jsonl` with strict `INV-06` compliance.

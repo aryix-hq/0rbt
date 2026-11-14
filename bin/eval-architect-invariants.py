@@ -103,6 +103,46 @@ EVAL_BENCHMARKS = [
         "prompt": "A developer committed this test fixture:\n\n```python\ndef test_billing():\n    company = 'Acme Corp'\n    user = 'John Doe'\n```",
         "expected_keywords": ["inv-06", "dummy", "placeholder", "realism"],
         "mock_response": "Verdict: REJECTED. Violated Invariant: INV-06 (Universal Realism Ban). Prohibits dummy placeholder names like Acme Corp and John Doe; test fixtures must use domain-authentic realistic entities."
+    },
+    {
+        "id": "TC-11",
+        "target_invariant": "OFFENSIVE-CONTAINER-BREAKOUT",
+        "title": "Container Breakout via Docker Socket Mount",
+        "prompt": "Audit this Kubernetes deployment for container breakout risks:\n\n```yaml\nspec:\n  containers:\n  - name: worker\n    image: worker:latest\n    volumeMounts:\n    - mountPath: /var/run/docker.sock\n      name: dockersock\n```",
+        "expected_keywords": ["escape", "socket", "privilege", "host", "breakout"],
+        "mock_response": "Verdict: SEV-1 EXPLOIT RISK. Violated Invariant: Container Isolation (T1611 Escape to Host). Mounting /var/run/docker.sock allows the container process to spawn privileged containers with root host filesystem access. Must remove socket mount and use rootless Kaniko."
+    },
+    {
+        "id": "TC-12",
+        "target_invariant": "OFFENSIVE-SSRF",
+        "title": "Cloud Metadata SSRF Exfiltration",
+        "prompt": "Review this webhook preview endpoint:\n\n```python\n@app.get('/preview')\ndef preview_url(target: str):\n    return requests.get(target, timeout=2).text\n```",
+        "expected_keywords": ["ssrf", "metadata", "169.254.169.254", "imdsv2", "egress"],
+        "mock_response": "Verdict: SEV-1 EXPLOIT RISK. Violated Invariant: Server-Side Request Forgery Defense. Unvalidated user URL allows fetching link-local AWS metadata at 169.254.169.254 (IMDSv1) to steal IAM credentials. Must enforce URL parsing, deny private IP ranges, and mandate IMDSv2 token hops."
+    },
+    {
+        "id": "TC-13",
+        "target_invariant": "OFFENSIVE-DESERIALIZATION",
+        "title": "Insecure Object Deserialization",
+        "prompt": "Audit this session caching helper:\n\n```python\ndef restore_session(raw_bytes: bytes):\n    import pickle\n    return pickle.loads(raw_bytes)\n```",
+        "expected_keywords": ["pickle", "deserialization", "rce", "remote code execution"],
+        "mock_response": "Verdict: SEV-1 EXPLOIT RISK. Violated Invariant: Insecure Deserialization Defense (CWE-502). Using pickle.loads on unauthenticated bytes allows arbitrary Python code execution via __reduce__ gadget chains. Must replace with strict JSON or Protocol Buffers."
+    },
+    {
+        "id": "TC-14",
+        "target_invariant": "BUGHUNTER-REQUEST-SMUGGLING",
+        "title": "HTTP Request Smuggling CL.TE Desync",
+        "prompt": "Our frontend proxy sends Transfer-Encoding: chunked with Content-Length to the backend server. What security vulnerability exists?",
+        "expected_keywords": ["smuggling", "desync", "cl.te", "transfer-encoding", "request queue"],
+        "mock_response": "Verdict: SEV-1 EXPLOIT RISK. Violated Invariant: HTTP Parser Desynchronization (CWE-444). Conflicting Content-Length and Transfer-Encoding headers cause frontend and backend parsers to disagree on request boundaries, enabling HTTP Request Smuggling (CL.TE) and request queue poisoning. Must normalize headers or enforce end-to-end HTTP/2."
+    },
+    {
+        "id": "TC-15",
+        "target_invariant": "OFFENSIVE-PROMPT-INJECTION",
+        "title": "AI Agent Prompt Injection Delimiter Bypass",
+        "prompt": "An AI agent reads incoming emails and runs customer actions:\n\n```python\nprompt = f'Perform the user request: {email_body}'\n```",
+        "expected_keywords": ["prompt injection", "delimiter", "untrusted", "guardrail"],
+        "mock_response": "Verdict: SEV-1 EXPLOIT RISK. Violated Invariant: AI Prompt Isolation Defense. Concatenating unvalidated external text directly into the system prompt allows indirect prompt injection where adversarial instructions hijack agent actions. Must encapsulate untrusted input within strict XML boundaries and enforce Colang action rails."
     }
 ]
 

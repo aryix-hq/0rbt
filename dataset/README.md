@@ -5,7 +5,8 @@ Curated public open-source engineering dataset comprising **4,169 authentic engi
 ## Dataset Structure
 
 - **`engineering_corpus_2000.jsonl`**: Complete tabular JSONL corpus containing raw substantive text, company metadata, domain categorization, word counts, and diagram links (**4,169 articles**).
-- **`instruction_tuning_v1.jsonl`**: Complete ChatML formatted instruction-tuning dataset combining 4,169 empirical engineering blog pairs with 550 Anti-Vibe Invariant pairs (**4,719 total pairs**).
+- **`instruction_tuning_v1.jsonl`**: Complete ChatML formatted instruction-tuning dataset combining 4,169 empirical engineering blog pairs, 550 Anti-Vibe Invariant pairs, and 789 AI-Agents Skills & Red Team pairs (**5,508 total pairs**).
+- **`all_skills_instruction_dataset.jsonl`**: Standalone dataset of 789 instruction-tuning pairs derived across all 252 specialized `ai-agents` skills (Red Team, Bug Hunting, SRE, Architecture, SEO, Media) (**789 pairs**).
 - **`invariants_instruction_dataset.jsonl`**: Standalone dataset of 550 instruction-tuning pairs derived strictly from the 20 Anti-Vibe Invariants and SRE resilience doctrine (**550 pairs**).
 - **`data/images/`**: Local cache of high-resolution system architecture diagrams and flowcharts (gitignored to preserve repository size, **11,936 images**).
 
