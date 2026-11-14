@@ -4,9 +4,10 @@ Curated public open-source engineering dataset comprising **2,065 authentic engi
 
 ## Dataset Structure
 
-- **`engineering_corpus_2000.jsonl`**: Complete tabular JSONL corpus containing raw substantive text, company metadata, domain categorization, word counts, and diagram links.
-- **`instruction_tuning_v1.jsonl`**: ChatML/Alpaca formatted instruction-tuning pairs for fine-tuning specialized reasoning models (`aryix/0rbt-architect`).
-- **`data/images/`**: Local cache of high-resolution system architecture diagrams and flowcharts (gitignored to preserve repository size).
+- **`engineering_corpus_2000.jsonl`**: Complete tabular JSONL corpus containing raw substantive text, company metadata, domain categorization, word counts, and diagram links (**2,065 articles**).
+- **`instruction_tuning_v1.jsonl`**: Complete ChatML formatted instruction-tuning dataset combining 2,065 empirical engineering blog pairs with 550 Anti-Vibe Invariant pairs (**2,615 total pairs**).
+- **`invariants_instruction_dataset.jsonl`**: Standalone dataset of 550 instruction-tuning pairs derived strictly from the 20 Anti-Vibe Invariants and SRE resilience doctrine.
+- **`data/images/`**: Local cache of high-resolution system architecture diagrams and flowcharts (gitignored to preserve repository size, **5,869 images**).
 
 ## Company Distribution
 
