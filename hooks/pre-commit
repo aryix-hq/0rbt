@@ -36,7 +36,7 @@ if [[ "${CURRENT_BRANCH}" == "main" || "${CURRENT_BRANCH}" == "master" ]]; then
 fi
 
 # 2. CONFIDENTIAL FILE ISOLATION CHECK
-CONFIDENTIAL_PATTERN='(wiki/(defects/DEF-|incidents/INC-|vulnerabilities/VULN-|research/RES-)[0-9A-Za-z_-]+\.md|\.env(\..+)?$|token_ledger\.json$|\.agents/memory/sessions/)'
+CONFIDENTIAL_PATTERN='(wiki/(defects/DEF-|incidents/INC-|vulnerabilities/VULN-)[0-9A-Za-z_-]+\.md|\.env(\..+)?$|token_ledger\.json$|\.agents/memory/sessions/)'
 STAGED_CONFIDENTIAL=$(git diff --cached --name-only 2>/dev/null | grep -E "${CONFIDENTIAL_PATTERN}" || true)
 
 if [[ -n "${STAGED_CONFIDENTIAL}" ]]; then

@@ -34,6 +34,6 @@ Prepare `0rbt` for public release on `https://github.com/aryix-hq/0rbt`, curate 
 
 ## 3. Associated Living Artifacts
 - **Primary PRD**: [`wiki/prd.md`](../prd.md)
-- **Implementation Plan Artifact**: [`opensource_launch_dataset_and_model_plan.md`](file:///Users/adithya/.gemini/antigravity/brain/b3244977-8c80-4765-9d28-f7e3adc4e912/opensource_launch_dataset_and_model_plan.md)
+- **Implementation Plan Artifact**: `opensource_launch_dataset_and_model_plan.md`
 - **Active Task Board**: [`wiki/TASK_BOARD.md`](../TASK_BOARD.md)
 - **Knowledge Memory**: [`wiki/memory.md`](../memory.md)

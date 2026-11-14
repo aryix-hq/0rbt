@@ -51,7 +51,7 @@ All video editing, timeline assembly, color grading, audio post-production, and 
 
 - **Specification**: Conform strictly to Apple FCPXML DTD versions 1.9, 1.10, or 1.11.
 - **Resource Binding**: Every `<asset-clip>` in the timeline `<spine>` must reference a valid `<asset id="...">` defined in `<resources>`.
-- **Absolute URI Contract**: Asset paths must use standard file URI notation (`file:///Volumes/...` or `file:///Users/...`).
+- **Absolute URI Contract**: Asset paths must use standard file URI notation (`file:///Volumes/...` or `file:///path/to/assets/...`).
 - **Chapter Markers**: Markers must declare `start`, `duration` (matching frame duration), and `value` (chapter title).
 
 ---

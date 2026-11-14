@@ -24,3 +24,20 @@ node_modules/
 .DS_Store
 .vscode/*
 !.vscode/settings.json
+
+# Model weights & intermediate training artifacts
+models/
+*.gguf
+*.safetensors
+*.bin
+
+# Local agent plugins & transient sessions
+.agents/plugins.json
+.agents/memory/sessions/
+token_ledger.json
+active_feature.md
+rescue_buffer.json
+flight_recorder.jsonl
+
+wiki/*
+architecture.md

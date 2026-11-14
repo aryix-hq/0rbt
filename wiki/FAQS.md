@@ -13,7 +13,7 @@ This document captures recurring operational questions, developer gotchas, and i
 ### Q: Why does Antigravity still show Google Drive after migrating to `~/Code/ai-agents`?
 **A**: Antigravity's Language Server caches plugin discovery paths in memory on boot.
 1. Run `Developer: Reload Window` (`Cmd + Shift + P`) to flush in-memory caches.
-2. Verify that `ls -la ~/.gemini/config/plugins/ai-agents` points to `/Users/adithya/Code/ai-agents`.
+2. Verify that `ls -la ~/.gemini/config/plugins/ai-agents` points to your plugin repository directory (e.g., `~/Code/ai-agents`).
 3. Archive or rename the legacy Google Drive folder to prevent accidental reads.
 
 ### Q: Does a project-level agent override a global agent?

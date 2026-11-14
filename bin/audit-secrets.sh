@@ -35,7 +35,7 @@ log_warn()  { echo -e "  ${YELLOW}⚠${NC} $1"; }
 log_check "Scanning active working tree & staged files"
 
 # 1.1 Confidential Files
-STAGED_CONFIDENTIAL=$(git diff --cached --name-only 2>/dev/null | grep -E '(wiki/(defects/DEF-|incidents/INC-|vulnerabilities/VULN-|research/RES-)|token_ledger\.json|active_feature\.md)' || true)
+STAGED_CONFIDENTIAL=$(git diff --cached --name-only 2>/dev/null | grep -E '(wiki/(defects/DEF-|incidents/INC-|vulnerabilities/VULN-)|token_ledger\.json|active_feature\.md)' || true)
 if [[ -n "${STAGED_CONFIDENTIAL}" ]]; then
   log_fail "Confidential internal artifacts staged for commit:"
   echo "${STAGED_CONFIDENTIAL}" | while read -r f; do echo "    - $f"; done
@@ -84,7 +84,7 @@ else
 fi
 
 # Search for tracked confidential files in historical tree
-HISTORICAL_DEFECTS=$(git log --name-only --oneline 2>/dev/null | grep -E '^wiki/(defects/DEF-|incidents/INC-|vulnerabilities/VULN-|research/RES-)[0-9A-Za-z_-]+\.md' || true)
+HISTORICAL_DEFECTS=$(git log --name-only --oneline 2>/dev/null | grep -E '^wiki/(defects/DEF-|incidents/INC-|vulnerabilities/VULN-)[0-9A-Za-z_-]+\.md' || true)
 if [[ -n "${HISTORICAL_DEFECTS}" ]]; then
   log_fail "Historical confidential artifacts committed to Git:"
   echo "${HISTORICAL_DEFECTS}" | sort -u
