@@ -103,8 +103,9 @@ flowchart TD
   4. **AI Invariant Rules**: Production invariant rules for agentic systems.
 
 ### Pillar 2: Curated Open Dataset
-* Thousands of structured distributed systems dilemmas, post-mortems, and downscale startup blueprints.
-* Formatted in clean Parquet and Alpaca/ShareGPT JSONL for research, retrieval, and fine-tuning.
+* **4,169 verified engineering articles** and **11,936 architecture diagrams** spanning 10+ years across 63 premier technology organizations.
+* **4,719 instruction-tuning pairs** (`dataset/instruction_tuning_v1.jsonl`) combining empirical post-mortems with 550 Anti-Vibe Invariant pairs (`dataset/invariants_instruction_dataset.jsonl`).
+* Formatted in clean ChatML and tabular JSONL for research, retrieval, and fine-tuning.
 
 ### Pillar 3: The Specialized Model (`aryix/0rbt-architect`)
 * **Phase A (Ollama Modelfile)**: Bundled system persona, retrieval reasoning instructions, and 20 anti-vibe engineering invariants.
