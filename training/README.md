@@ -34,6 +34,6 @@ The `training/` package provides deterministic routines for supervised fine-tuni
 ---
 
 ## 3. Enforced Invariants
-- **`INV-TRN-01` (Universal Dummy Name Ban)**: All instruction templates, system prompts, and training data must be free of placeholder names (`INV-06`). Authentic engineering case studies and realistic architectures are strictly required.
+- **`INV-TRN-01` (Synthetic Placeholder Name Ban)**: All instruction templates, system prompts, and training data must be free of placeholder names (`INV-06`). Authentic engineering case studies and realistic architectures are strictly required.
 - **`INV-TRN-02` (Deterministic ChatML Formatting)**: Prompts must adhere strictly to `<|im_start|>system`, `<|im_start|>user`, and `<|im_start|>assistant` token boundaries to prevent model hallucination and token bleed.
 - **`INV-TRN-03` (Zero-Token Mock Verification)**: Training and export scripts must maintain self-contained `--mock-test` routines that run in `<1s` without GPU or network dependencies.
