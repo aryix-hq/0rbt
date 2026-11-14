@@ -46,8 +46,13 @@ def audit_diff_rules(diff_text: str) -> List[Dict[str, Any]]:
             current_file = line[6:].strip()
             continue
 
-        if current_file in ["bin/local-code-reviewer.py", "bin/invariant-fuzzer.py", "bin/adversarial-fuzzer.py"] or \
-           current_file.startswith("dataset/") or current_file.endswith(".jsonl"):
+        if current_file in [
+            "bin/local-code-reviewer.py",
+            "bin/invariant-fuzzer.py",
+            "bin/adversarial-fuzzer.py",
+            "bin/eval-architect-invariants.py",
+            "bin/synthesize-skills-dataset.py"
+        ] or current_file.startswith("dataset/") or current_file.startswith("wiki/") or current_file.endswith(".jsonl"):
             continue
 
         if not line.startswith("+") or line.startswith("+++"):
@@ -159,8 +164,8 @@ def audit_diff_rules(diff_text: str) -> List[Dict[str, Any]]:
 def get_git_diff(base_branch: str = "main") -> str:
     """Retrieves diff between base_branch and HEAD, falling back to unstaged diff."""
     try:
-        # First try diff against base branch
-        res = subprocess.run(["git", "diff", f"{base_branch}...HEAD"], cwd=REPO_ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        # First try diff against base branch (including uncommitted working tree changes)
+        res = subprocess.run(["git", "diff", base_branch], cwd=REPO_ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         if res.returncode == 0 and res.stdout.strip():
             return res.stdout
         

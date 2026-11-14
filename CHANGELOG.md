@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- **10-Year Historical Engineering Corpus & Diagram Archive (FEAT-002, PLAN-003)**:
+  - **Massive 10-Year Historical Crawl**: Enhanced candidate harvesting in `bin/bulk-harvest-2000.py` to traverse child sitemaps and archives spanning 2012–2026 across Cloudflare, Datadog, GitHub, Meta, Shopify, AWS, Dropbox, GitLab, Docker, Red Hat, Netflix, and Google.
+  - **4,169 Authentic Engineering Articles**: Extracted, cleaned, and categorized 4,169 substantive technical posts in `data/engineering_intelligence.db` and `dataset/engineering_corpus_2000.jsonl` with strict `INV-06` compliance.
+  - **11,936 System Architecture Diagrams**: Ingested and stored 11,936 high-resolution system topology diagrams, state charts, and network flows in `data/images/`.
+  - **4,719 Fine-Tuning Pairs**: Merged 4,169 empirical engineering post-mortems with 550 Anti-Vibe Invariant pairs into a unified `dataset/instruction_tuning_v1.jsonl`.
+  - **Model Rebuild**: Updated `Modelfile` to eliminate placeholder entities and rebuilt `aryix/0rbt-architect:latest` (ID `6d2aa0339b65`, 9.0 GB) on local Ollama at $0 cloud tokens.
 - Implemented **AI-Agents Skills & Anti-Vibe Invariants Integration into aryix/0rbt-architect (FEAT-002, PLAN-003, ADR-016)**:
   - **Deterministic Invariants Synthesizer**: Created `bin/synthesize-skills-dataset.py` synthesizing 550 high-signal instruction-tuning pairs derived from the 20 Anti-Vibe Invariants (`INV-SEC-01` to `INV-SEC-10`), SRE resilience doctrine (`INV-RES-01` to `INV-RES-05`), and multi-domain backend invariants.
   - **Dataset Expansion & Unification**: Merged 550 invariant instruction pairs with the 2,065 empirical engineering post-mortem corpus, expanding `dataset/instruction_tuning_v1.jsonl` to **2,615 total ChatML pairs** alongside standalone `dataset/invariants_instruction_dataset.jsonl`.
