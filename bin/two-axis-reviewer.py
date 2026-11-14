@@ -74,8 +74,17 @@ def run_axis_2_spec(diff_text: str, spec_path: str = None) -> dict:
     if not has_tests:
         findings.append("Missing zero-mock test coverage in git diff for implemented feature.")
 
-    # 3. Check for unverified TODOs or placeholder stubs
-    todo_matches = re.findall(r'(\+\s*.*(TODO|FIXME|throw new NotImplementedException).*$)', diff_text, re.MULTILINE)
+    # 3. Check for unverified TODOs or placeholder stubs (ignoring dataset and markdown files)
+    code_lines = []
+    current_file = ""
+    for line in diff_text.splitlines():
+        if line.startswith("+++ b/"):
+            current_file = line[6:].strip()
+        elif line.startswith("+") and not line.startswith("+++"):
+            if not current_file.startswith("dataset/") and not current_file.endswith((".jsonl", ".md", ".json")):
+                code_lines.append(line)
+
+    todo_matches = re.findall(r'(\+\s*.*(TODO|FIXME|throw new NotImplementedException).*$)', "\n".join(code_lines), re.MULTILINE)
     if len(todo_matches) > 3:
         findings.append(f"Excessive unfinished stubs detected in diff ({len(todo_matches)} occurrences).")
 
