@@ -1,57 +1,127 @@
-# Product Requirements Document (PRD): Antigravity AI-Agents Enterprise Engine
+# Product Requirements Document (PRD): 0rbt — Open-Source Engineering Intelligence & AI Decision Engine
 
-- **Project**: `ai-agents`
-- **Status**: Approved / Living Master
-- **Target Release**: `v2.3.0`
-- **Owner**: Product Management Trio (`@product-manager`, `@architect`, `@cto`, `@engineering-manager`)
-
----
-
-## 1. Executive Summary & Problem Statement
-
-Software teams leveraging LLM coding assistants face high cloud token expenditure, unpredictable "vibe coding" regressions, and context loss across chat sessions. `ai-agents` is an autonomous engineering organization framework providing:
-1. **$0 Cloud Token Local Inference**: Routine coding, git operations, and code review execute locally via Ollama (`qwen2.5-coder:14b`).
-2. **Deterministic Invariant Enforcement**: 34 automated static linters blocking BOLA/IDOR, SQL injection, Mass Assignment, N+1 query loops, and AI slop UI before PR merge.
-3. **Mandatory Ephemeral Staging Lifecycle**: Strict zero-testing-on-production policy with signed staging attestation certificates.
-4. **Universal IDE Distribution**: Automated transpilation to Claude Code, Cursor, Windsurf, Aider, and Gemini CLI.
+- **Project Name**: `0rbt` (Orbit)
+- **Status**: Active Living Specification / Public Open-Source Initiative
+- **Target Release**: `v1.0.0`
+- **Owner**: Technical Founder & Community Lead (`@product-manager`, `@architect`, `@cto`)
+- **Repository Target**: Open-Source GitHub Repository (`github.com/0rbt-ai/0rbt`)
 
 ---
 
-## 2. Target Personas & Core Workflows
+## 1. Executive Summary & Vision
 
-| Persona | Role | Key Goal | Invariant Guard |
-| :--- | :--- | :--- | :--- |
-| **Lead Architect** | System Topology & Scalability | Enforce stateless microservices and clean API contracts | `INV-DOM-04`, `INV-PERF-01` |
-| **AppSec Engineer** | Offensive Audits & API Hardening | Prevent OWASP Top 10 leaks, BOLA/IDOR, and secret commits | `INV-SEC-01` to `INV-SEC-10` |
-| **Engineering Manager** | Delivery Velocity & Gatekeeping | Ensure zero untested code merges to main | Rule 1 (PR Mandate), `INV-TEST-01` |
-| **Frontend Architect** | Design System Governance | Prevent vibe-coded UI slop and magic inline CSS | `INV-UI-01`, `INV-UI-02`, `INV-UI-03` |
+Today, LLM coding assistants (Cursor, Claude Code, GitHub Copilot, Windsurf) excel at writing isolated functions, but they **frequently make catastrophic architectural decisions** when designing distributed systems. They recommend premature microservices, fail to implement idempotency on payment endpoints, miss distributed locking race conditions, omit circuit breakers, and over-engineer simple startup backends with unneeded Kubernetes clusters.
 
----
+Meanwhile, the world's greatest engineering teams (Netflix, Stripe, Uber, Google, Meta, GitHub, Datadog, Cloudflare, AWS) have already solved these exact architectural dilemmas and published their failures, post-mortems, and invariants in engineering blogs.
 
-## 3. Core Capabilities & Invariants
-
-- **Zero Random Coding**: All work strictly follows the 4-Stage Lifecycle (`Research -> Feature Spec -> Plan -> Execution`).
-- **Universal Dummy Name Ban**: Absolute ban on fictional placeholders (`Acme`, `Dummy`, `John Doe`).
-- **20-Point Anti-Vibe Shield**: Automated detection of the 20 failure points (Security, Backend/Scale, Code).
-- **Line-by-Line E2E Coverage**: Every PR must include zero-mock automated test cases covering newly added logic.
-- **6-Core AI Context Standard**: Every project must maintain `prd.md`, `architecture.md`, `rules.md`, `design.md`, `tasks.md`, and `memory.md`.
-- **Matt Pocock Engineering Skills Suite (FEAT-042)**: Interactive architectural grilling (`grill-with-docs`), vertical tracer-bullet task decomposition (`to-tickets` / `tracer-slicer.py`), secret-scrubbed state compaction (`agent-handoff.py`), decoupled two-axis code review (`two-axis-reviewer.py`), and uncertainty navigation (`wayfinder`).
-- **Google Elephant-Goldfish Model Suite (FEAT-043)**: Split cognitive labor eliminating confirmation bias via Dave Rensin's EGM model: stateless 5-pass spec review (`egm-goldfish.py`), leaf-level component contracts reducing monorepo context overhead by >85% (`INV-DOC-02` / `egm-peanuts.py`), and AST-driven spec-to-code drift detection between routes/schemas and architecture docs (`INV-DOC-03` / `egm-drift.py`).
-- **Agentic SEO, LLMS.txt & Strict Schema.org Suite (FEAT-044)**: On-page AI discoverability and Google Rich Results compliance: automated `/llms.txt` and `/llms-full.txt` synthesis (`llms-txt-generator.py`), strict Schema.org JSON-LD AST validation for SoftwareApplication/Organization/Article/FAQ (`INV-SEO-01` / `schema-validator.py`), and deterministic heading progression and metadata linting (`INV-SEO-02` / `technical-seo-linter.py`).
-- **Frontier Labs Phase 1 Suite (FEAT-045)**: Architectural extraction from Anthropic and OpenAI: Anthropic Structured XML Delimiter Architecture (`<agent_identity>`, `<operating_invariants>`, `<delegation_rules>`, `<tool_usage>`, `<scratchpad>`) eliminating prompt injection and instruction bleed across 5 IDE targets; OpenAI Typed Agent Handoff Routines (`HandoffRoutine`) enforcing DAG acyclicity (`INV-AGENT-01`) and eliminating circular delegation loops; OpenAI Zero-Dependency Simple-Evals Local Runner (`simple-evals.py`) benchmarking coding invariants, mathematical logic, and JSON schema compliance in $<0.05$s.
-- **Frontier Labs Phase 2 Suite (FEAT-046)**: Defense & Hardening extraction from NVIDIA and Google: NVIDIA NeMo Colang Guardrails Engine (`agent-guardrails.py`, `.agents/guardrails/rules.co`) providing ultra-fast ($<5\text{ms}$) multi-tier Input Rails (prompt injection shielding), Action Rails (destructive tool interception, prod test blocks), and Output Rails (secret scrubbing, `INV-06` dummy name sanitization); Google OSS-Inspired Invariant Mutation Fuzzer (`invariant-fuzzer.py`) generating 50+ syntactic mutations to mathematically verify 100% linter coverage and zero blindspots.
-- **Frontier Labs Phase 3 Suite (FEAT-047)**: Optimization & Synthesis across xAI, Anthropic, OpenAI, Antigravity, and NVIDIA: xAI `x-algorithm` Heavy Ranker & Visibility Filters (`candidate-ranker.py`), OpenAI Fast Offline BPE Tokenizer & Saturation Budgeter (`fast-tokenizer.py`), Anthropic Ephemeral Prompt Cache Breakpoint Optimizer (`context-cache-optimizer.py`), Google Antigravity Swarm Coordinator & Task Slicer (`swarm-coordinator.py`), and NVIDIA Nemotron Synthetic Adversarial Guardrail Stress Tester (`adversarial-fuzzer.py`) maintaining verified 100% defense rate against 30+ injection vectors.
-- **Project-Scoped Document Numbering Suite (FEAT-048)**: Strict project isolation preventing cross-project ticket and document numbering leakage (`INV-DOC-04`): dynamic filesystem next-ID calculator and document scaffolder (`doc-numberer.py`), project integrity auditor detecting sequence gaps ($>3$) and duplicates (`ai-agents doc-audit`), and pre-PR static reviewer gate blocking foreign context bleed.
-- **Enterprise Resilience, Cellular Multi-Tenancy & Cascading Failure Defense (FEAT-049)**: Big-Tech grade fault tolerance derived from global cloud outage post-mortems: cellular architecture & shuffle sharding ($<3.5\%$ blast radius), Envoy panic mode health checks (`INV-RES-01`), liveness/readiness probe decoupling (`INV-RES-02`), decorrelated full jitter retry mandate (`INV-RES-03`), slow-start warm-up ramps (`INV-RES-04`), and out-of-band control plane isolation (`INV-RES-05`) via `bin/resilience-guard.py`.
-- **Autonomous Engineering Blog Intelligence Pipeline (FEAT-001)**: Continuous monitoring of 60+ premier engineering organizations (Google, Netflix, Stripe, Uber, Meta, GitHub, Datadog) via n8n workflow pipeline. Enforces deterministic canonical URL SHA-256 deduplication (`INV-BLOG-01`), 200-word substance gating (`INV-BLOG-02`), and structured 4-Dimensional AI Synthesis (`INV-BLOG-03`) to generate viral LinkedIn thought leadership, living architecture documentation, lean client advisory blueprints, and continuous `ai-agents` codebase rule upgrades.
+### The Mission of `0rbt`:
+Build an end-to-end, open-source intelligence pipeline, curated dataset, and specialized AI model (**"0rbt-Architect"**) that ingests 10+ years of battle-tested engineering post-mortems to:
+1. **Guide AI Agents**: Act as an upstream architectural reasoning engine / review gate that audits system designs before code is generated.
+2. **Help Engineers Make Outage-Proof Decisions**: Provide concrete architectural trade-offs, system invariants, and small-scale downscaling playbooks ("Big Tech $\to$ Lean Startup").
+3. **Be 100% Open-Source & Community-Driven**: Publish the tool, the curated dataset, and the model weights on GitHub, Hugging Face, and Ollama Hub for the global developer ecosystem.
 
 ---
 
-## 4. Key Performance Indicators (KPIs)
-- **Local Review Latency**: $<0.10$ seconds for full 35-invariant static check.
-- **Guardrails Evaluation Latency**: $<0.005$ seconds ($<5\text{ms}$) per input/action/output tier.
-- **Mutation Kill Rate**: 100% kill rate across all generated code mutations.
-- **Transpilation Speed**: $<0.25$ seconds for all 53 agents across 5 IDE targets.
-- **Evaluation Latency**: $<0.05$ seconds for offline mock evaluation suite across 10 benchmarks.
-- **Cloud Token Savings**: $>80\%$ routine operations offloaded to local Ollama ($0 cost).
-- **Test Coverage**: 100% line coverage for critical domain engines in `bin/`.
+## 2. The 3 Core Pillars of `0rbt`
+
+```mermaid
+flowchart TD
+    subgraph Pillar_1 ["Pillar 1: Continuous Ingestion & Intelligence Pipeline"]
+        Feeds["63 Tier-1 Engineering Blogs\n(config/engineering_blogs_registry.json)"] --> n8nEngine["n8n Automated Workflow\n(Deduplication & Substance Gate)"]
+        ArchiveScraper["Historical Archive Scrapers\n(Sitemaps & Medium Archives)"] --> LocalExtractor["Clean Markdown Extractor"]
+        n8nEngine & LocalExtractor --> LocalSynthesizer["4D Synthesis via Ollama\n(qwen2.5-coder:14b)"]
+    end
+
+    subgraph Pillar_2 ["Pillar 2: Open Dataset & Living Knowledge Base"]
+        LocalSynthesizer --> SQLiteDB[("SQLite Storage & Embeddings\ndata/engineering_intelligence.db")]
+        LocalSynthesizer --> WikiMarkdown["Curated Markdown Wiki\nwiki/learnings/*.md"]
+        SQLiteDB --> HuggingFaceDataset["Hugging Face Dataset\n(0rbt/engineering-postmortems-v1)"]
+    end
+
+    subgraph Pillar_3 ["Pillar 3: The Specialized Decision Model (0rbt-Architect)"]
+        HuggingFaceDataset --> FineTunePipeline["Instruction-Tuning / DPO Pipeline\n(LoRA on Qwen 2.5 14B / 7B)"]
+        FineTunePipeline --> HuggingFaceModel["Hugging Face Model Hub\n(GGUF, Safetensors)"]
+        FineTunePipeline --> OllamaHub["Ollama Registry\n(ollama run 0rbt/architect)"]
+        OllamaHub --> AgentsIntegration["IDE Agent Gateways\n(Cursor, Claude Code, Antigravity)"]
+    end
+```
+
+---
+
+## 3. Detailed Pillar Specifications
+
+### Pillar 1: Ingestion & Intelligence Pipeline
+- **Continuous Polling**: n8n workflow monitoring 63 verified RSS/Atom feeds every 3 hours with `ETag` and `If-Modified-Since` caching.
+- **Historical Archive Scrapers**: Modular Python crawlers traversing company sitemaps and Medium archives to ingest 5+ years of historical post-mortems.
+- **Substance & Deduplication Gates**:
+  - `INV-BLOG-01`: Deterministic SHA-256 canonical URL hashing.
+  - `INV-BLOG-02`: Minimum 200-word threshold; filters out job listings, conference marketing, and awards.
+- **4-Dimensional Synthesis Matrix**:
+  1. *LinkedIn Thought Leadership*: 3 contrarian/narrative/practical hooks + carousel slide outline.
+  2. *Enterprise Architecture*: Problem, solution, invariants, and trade-offs.
+  3. *Small-Scale Client Playbook*: "Big Tech $\to$ Lean Startup" translation (Postgres/Redis alternatives).
+  4. *AI Invariants*: Automated rules proposed for agentic systems.
+
+### Pillar 2: Curated Open Dataset
+- **Format**: Parquet and SQLite containing thousands of verified engineering breakdowns.
+- **Data Schema**:
+  - `company`, `title`, `canonical_url`, `published_at`
+  - `problem_statement`, `root_cause`, `solution_architecture`
+  - `system_invariants`, `trade_offs`, `cost_implications`
+  - `small_scale_alternative`, `actionable_checklist`
+- **Distribution**: Published under Open Data Commons (ODC-By / CC-BY 4.0) on Hugging Face Datasets (`0rbt/engineering-postmortems`).
+
+### Pillar 3: The Public Decision Model ("0rbt-Architect")
+- **Phase A (Ollama Modelfile & Local RAG)**:
+  - Packaged CLI (`bin/eng-intelligence.py`) enabling zero-token RAG over SQLite vector embeddings.
+  - Custom Ollama Modelfile published to Ollama Hub (`0rbt/architect`) bundling the staff architect persona and retrieval instructions.
+- **Phase B (Fine-Tuned Specialized Model)**:
+  - Generate 5,000+ synthetic architectural instruction pairs:
+    - *Input*: "A developer wants to implement credit card processing in a multi-region Node.js app."
+    - *Reasoning*: Identifies race conditions, network partition hazards, double-charging risks.
+    - *Output*: Prescribes two-phase idempotency locking (Stripe pattern), circuit breakers, and fallback queues.
+  - Fine-tune Qwen 2.5 (7B and 14B) via LoRA/QLoRA on consumer GPUs (or cloud spot instances).
+  - Quantize into 4-bit and 8-bit GGUF models and publish to Hugging Face and Ollama Hub.
+
+---
+
+## 4. Target Personas & User Stories
+
+| Persona | Motivation | User Story |
+| :--- | :--- | :--- |
+| **AI Coding Agent** | Prevent architectural bugs | *As an AI coding agent, I want to query `0rbt/architect` before writing microservice code so that I enforce idempotency and circuit breakers automatically.* |
+| **Staff Software Engineer** | System design review | *As a staff engineer, I want to search 10 years of post-mortems across Netflix, Stripe, and Uber to see how others solved high-cardinality telemetry or distributed locks.* |
+| **Startup CTO / Consultant** | Avoid premature over-engineering | *As a startup CTO, I want to see how to achieve 85% of Big Tech resilience using Postgres and Redis without spending \$10k/mo on enterprise SaaS.* |
+| **Open-Source Contributor** | Extend coverage | *As an open-source contributor, I want to add new engineering blog scrapers (e.g. Discord, Figma, Canva) and contribute evaluation benchmarks.* |
+
+---
+
+## 5. User Acceptance Criteria (UAC)
+
+- [ ] **UAC-01 (Continuous Automation)**: n8n workflow executes every 3 hours with zero crashes, deduplicating articles via SHA-256 and storing 4D synthesis in SQLite.
+- [ ] **UAC-02 (Local Zero-Token RAG CLI)**: Engineers can run `python3 bin/eng-intelligence.py ask "<question>"` and receive verified architecture guidance citing real company post-mortems in $<5$ seconds.
+- [ ] **UAC-03 (Historical Archive Scraper)**: CLI supports crawling company sitemaps to ingest historical articles back to 2018.
+- [ ] **UAC-04 (Dataset Export to Hugging Face)**: An automated script exports SQLite learnings into clean Parquet / JSONL format for Hugging Face Hub.
+- [ ] **UAC-05 (Ollama Hub Modelfile)**: Community can run `ollama run 0rbt/architect` to query the specialized architectural model directly.
+- [ ] **UAC-06 (Open-Source Repository Readiness)**: Comprehensive `README.md`, `CONTRIBUTING.md`, `LICENSE` (Apache 2.0 / MIT), and CI verification test suites.
+
+---
+
+## 6. Open Source Roadmap & Milestones
+
+- **Milestone 1 (Foundations & Pipeline — Done)**:
+  - 63-source registry (`config/engineering_blogs_registry.json`).
+  - Production n8n workflow (`n8n/engineering_blogs_pipeline.json`).
+  - Local SQLite DB (`data/engineering_intelligence.db`) and local Ollama RAG CLI (`bin/eng-intelligence.py`).
+  - Seeded initial post-mortems (Netflix, Stripe, Uber).
+- **Milestone 2 (Historical Crawlers & Dataset Scale)**:
+  - Implement historical sitemap crawlers for top 25 companies.
+  - Scale dataset to 2,000+ indexed post-mortems.
+  - Export dataset to Hugging Face (`0rbt/engineering-postmortems-v1`).
+- **Milestone 3 (Public Ollama Release & Community Repo)**:
+  - Publish `0rbt` repository on GitHub with contributor guides.
+  - Release `0rbt/architect` Modelfile on Ollama Hub.
+- **Milestone 4 (Specialized Fine-Tuned Model)**:
+  - Train LoRA fine-tune on Qwen 2.5 14B / 7B.
+  - Benchmark architectural decision quality against GPT-4o and Claude 3.5 Sonnet using an open system design benchmark.
+  - Publish GGUF weights to Hugging Face Hub.
