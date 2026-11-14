@@ -44,9 +44,25 @@ All structural changes to schemas, frameworks, or security boundaries must be de
 
 | ADR ID | Title | Status | Date | Decision Summary |
 | :--- | :--- | :--- | :--- | :--- |
-| [`ADR-001`](./adr/ADR-001.md) | Modular Monolith & Postgres RLS | Accepted | 2026-10-17 | Enforce tenant isolation via PostgreSQL RLS |
+| [`ADR-001`](./adr/ADR-001-AUTONOMOUS-ENGINEERING-BLOG-INTELLIGENCE-PIPELINE.md) | Autonomous Engineering Blog Intelligence Pipeline | Accepted | 2026-11-14 | Decoupled n8n pipeline, canonical SHA256 deduplication, 4D AI synthesis & multi-channel dispatch |
 | [`ADR-002`](./adr/ADR-002.md) | Stateless Microservices & Anti-Vibe Coding | Accepted | 2026-10-21 | Mandate stateless compute, idempotency, boundary validation & BOLA defense |
 | [`ADR-003`](./adr/ADR-003.md) | Dual-Scale Architecture & Observability | Accepted | 2026-10-21 | Enforce polyglot persistence, OTel traceability, and laptop-to-cloud dual-scale sizing |
+
+---
+
+## 4. Engineering Blog Intelligence Pipeline Topology
+
+```mermaid
+flowchart LR
+    Feeds["60+ Tier-1 Tech Feeds\n(config/engineering_blogs_registry.json)"] --> Cron["n8n Schedule Trigger\n(Every 3 Hours)"]
+    Cron --> Dedup["Canonical URL Normalization\n& SHA-256 Hash Deduplication"]
+    Dedup --> Gate["Substance & Readability Gate\n(>200 Words, Noise Filter)"]
+    Gate --> AI["4-Dimensional AI Synthesis Engine\n(Local Ollama / Cloud Gemini)"]
+    AI --> LinkedIn["1. LinkedIn Thought Leadership\n(3 Hooks, Carousel, Body)"]
+    AI --> Wiki["2. Living Architecture Scribe\n(wiki/learnings/HASH.md)"]
+    AI --> Client["3. Small-Scale Client Blueprint\n(Lean Startup Advisory)"]
+    AI --> Codebase["4. ai-agents Evolution Queue\n(Candidate Rules & Invariants)"]
+```
 
 
 

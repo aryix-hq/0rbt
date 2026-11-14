@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- Implemented **Autonomous Engineering Blog Intelligence Pipeline (FEAT-001, PLAN-001, ADR-001)**:
+  - **Curated 60+ Source Registry**: Consolidated verified RSS, Atom, and Medium feed endpoints across 63 tier-1 technology organizations (Google, Netflix, Stripe, Uber, Meta, GitHub, Datadog, Cloudflare, etc.) into `config/engineering_blogs_registry.json`.
+  - **Deterministic Canonical URL Deduplication**: Enforced `INV-BLOG-01` via SHA-256 hashing over normalized URLs (stripping query parameters, tracking tags, and protocol fragments) with PostgreSQL/Datatable persistence.
+  - **Substance & Readability Gate**: Enforced `INV-BLOG-02` with 200-word thresholds and noise filtering to discard event announcements and marketing copy.
+  - **Structured 4-Dimensional AI Synthesis**: Enforced `INV-BLOG-03` generating LinkedIn thought leadership drafts (3 hooks, 4-slide carousel outline, post body), architectural knowledge base records, lean client advisory blueprints ("Big Tech to Lean Startup"), and continuous `ai-agents` codebase rule proposals.
+  - **Multi-Channel Dispatch & Living Wiki Integration**: Structured dispatch to Telegram review queues, living Markdown scribe (`wiki/learnings/`), and `.agents/` improvement staging.
+  - **Automated Zero-Mock Verification Harness**: Added `bin/test-blog-pipeline.py` testing registry integrity, deduplication hashing, substance gating, n8n workflow graph connectivity, and 4D synthesis JSON schema conformance with 100% pass rate.
 - Implemented **Dual-Scale Architecture, Polyglot Persistence & End-to-End Observability Standards** (`wiki/adr/ADR-003.md`, `wiki/DEPLOYMENT.md`, `agents/database-architect.md`, `agents/devops-sre.md`):
   - **Database Architect SQL, NoSQL & Streaming Mastery**: Expanded `agents/database-architect.md` and `skills/database-architect/SKILL.md` to cover relational SQL (PostgreSQL 16 RLS, non-blocking migrations, PgBouncer), NoSQL (Redis 7 in-memory caching, jittered TTL, distributed locks, MongoDB document modeling), and Event Streaming / Message Queues (Apache Kafka partitioned topics, RabbitMQ DLX, lightweight Redis Streams, Transactional Outbox pattern, and idempotent consumer deduplication).
   - **DevOps / SRE Observability & Distributed Traceability**: Expanded `agents/devops-sre.md` and `skills/devops-sre/SKILL.md` to implement full-spectrum observability (structured JSON logging, Prometheus RED/USE metrics, Grafana dashboards, multi-window burn rate alerts) and end-to-end distributed tracing (OpenTelemetry W3C `traceparent` propagation across HTTP headers and message queue payloads, correlation ID stitching, and commit-to-artifact SBOM provenance).

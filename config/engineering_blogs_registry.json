@@ -1,0 +1,574 @@
+{
+  "version": "1.0.0",
+  "description": "Curated & deduplicated registry of premier engineering and tech blogs for autonomous monitoring and knowledge extraction.",
+  "updated_at": "2026-11-14",
+  "sources": [
+    {
+      "id": "google-dev",
+      "company": "Google",
+      "category": "Cloud & Distributed Systems",
+      "blog_url": "https://developers.googleblog.com/",
+      "feed_url": "https://developers.googleblog.com/feeds/posts/default",
+      "feed_type": "atom",
+      "active": true
+    },
+    {
+      "id": "google-cloud",
+      "company": "Google Cloud",
+      "category": "Cloud & Infrastructure",
+      "blog_url": "https://cloud.google.com/blog/",
+      "feed_url": "https://cloud.google.com/blog/rss/",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "netflix-tech",
+      "company": "Netflix",
+      "category": "High-Scale Streaming & Systems",
+      "blog_url": "https://netflixtechblog.com/",
+      "feed_url": "https://netflixtechblog.com/feed",
+      "feed_type": "medium",
+      "active": true
+    },
+    {
+      "id": "netflix-research",
+      "company": "Netflix Research",
+      "category": "AI & Recommendation Systems",
+      "blog_url": "https://netflixtechblog.com/tagged/research",
+      "feed_url": "https://medium.com/feed/netflix-techblog/tagged/research",
+      "feed_type": "medium",
+      "active": true
+    },
+    {
+      "id": "airbnb-eng",
+      "company": "Airbnb",
+      "category": "Consumer Platforms & Data Science",
+      "blog_url": "https://medium.com/airbnb-engineering",
+      "feed_url": "https://medium.com/feed/airbnb-engineering",
+      "feed_type": "medium",
+      "active": true
+    },
+    {
+      "id": "airbnb-data",
+      "company": "Airbnb Data Science",
+      "category": "Data Engineering & Analytics",
+      "blog_url": "https://medium.com/airbnb-engineering/data/home",
+      "feed_url": "https://medium.com/feed/airbnb-engineering/tagged/data-science",
+      "feed_type": "medium",
+      "active": true
+    },
+    {
+      "id": "uber-eng",
+      "company": "Uber",
+      "category": "Real-Time Dispatch & Infrastructure",
+      "blog_url": "https://eng.uber.com/",
+      "feed_url": "https://www.uber.com/blog/engineering/rss/",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "uber-data",
+      "company": "Uber Data Science",
+      "category": "Machine Learning & Marketplace Optimization",
+      "blog_url": "https://eng.uber.com/tag/data-science/",
+      "feed_url": "https://www.uber.com/blog/data-science/rss/",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "meta-eng",
+      "company": "Meta",
+      "category": "Distributed Systems & AI",
+      "blog_url": "https://engineering.fb.com/",
+      "feed_url": "https://engineering.fb.com/feed/",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "aws-news",
+      "company": "Amazon Web Services",
+      "category": "Cloud Architecture & Serverless",
+      "blog_url": "https://aws.amazon.com/blogs/aws/",
+      "feed_url": "https://aws.amazon.com/blogs/aws/feed/",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "aws-arch",
+      "company": "AWS Architecture",
+      "category": "Cloud Architecture & Patterns",
+      "blog_url": "https://aws.amazon.com/blogs/architecture/",
+      "feed_url": "https://aws.amazon.com/blogs/architecture/feed/",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "microsoft-eng",
+      "company": "Microsoft",
+      "category": "Enterprise Systems & AI",
+      "blog_url": "https://blogs.microsoft.com/ai/category/engineering/",
+      "feed_url": "https://blogs.microsoft.com/feed/",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "microsoft-azure",
+      "company": "Microsoft Azure",
+      "category": "Cloud Infrastructure",
+      "blog_url": "https://azure.microsoft.com/en-us/blog/",
+      "feed_url": "https://azure.microsoft.com/en-us/blog/feed/",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "linkedin-eng",
+      "company": "LinkedIn",
+      "category": "High-Throughput Social Graph",
+      "blog_url": "https://engineering.linkedin.com/blog",
+      "feed_url": "https://engineering.linkedin.com/blog.rss",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "linkedin-ai",
+      "company": "LinkedIn AI",
+      "category": "AI & Representation Learning",
+      "blog_url": "https://engineering.linkedin.com/blog/topic/ai",
+      "feed_url": "https://engineering.linkedin.com/blog.rss",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "twitter-eng",
+      "company": "Twitter / X",
+      "category": "Distributed Messaging & Cache",
+      "blog_url": "https://blog.twitter.com/engineering",
+      "feed_url": "https://blog.twitter.com/engineering/en_us/blog.rss",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "spotify-eng",
+      "company": "Spotify",
+      "category": "Audio Streaming & Platform DevEx",
+      "blog_url": "https://engineering.atspotify.com/",
+      "feed_url": "https://engineering.atspotify.com/feed/",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "slack-eng",
+      "company": "Slack",
+      "category": "Real-Time Messaging & Collaboration",
+      "blog_url": "https://slack.engineering/",
+      "feed_url": "https://slack.engineering/feed/",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "github-eng",
+      "company": "GitHub",
+      "category": "Developer Tools & CI/CD",
+      "blog_url": "https://github.blog/category/engineering/",
+      "feed_url": "https://github.blog/category/engineering/feed/",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "dropbox-tech",
+      "company": "Dropbox",
+      "category": "Storage Infrastructure & Sync",
+      "blog_url": "https://dropbox.tech/",
+      "feed_url": "https://dropbox.tech/feed",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "pinterest-eng",
+      "company": "Pinterest",
+      "category": "Visual Search & Graph Systems",
+      "blog_url": "https://medium.com/@Pinterest_Engineering",
+      "feed_url": "https://medium.com/feed/@Pinterest_Engineering",
+      "feed_type": "medium",
+      "active": true
+    },
+    {
+      "id": "etsy-eng",
+      "company": "Etsy (Code as Craft)",
+      "category": "Continuous Deployment & DevEx",
+      "blog_url": "https://codeascraft.com/",
+      "feed_url": "https://codeascraft.com/feed/atom/",
+      "feed_type": "atom",
+      "active": true
+    },
+    {
+      "id": "salesforce-eng",
+      "company": "Salesforce",
+      "category": "Multi-Tenant Cloud & SaaS",
+      "blog_url": "https://engineering.salesforce.com/",
+      "feed_url": "https://engineering.salesforce.com/feed/",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "ibm-dev",
+      "company": "IBM Developer",
+      "category": "Hybrid Cloud & Open Source",
+      "blog_url": "https://developer.ibm.com/blogs/",
+      "feed_url": "https://developer.ibm.com/feed/",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "intel-software",
+      "company": "Intel Developer Zone",
+      "category": "Silicon Architecture & Compilers",
+      "blog_url": "https://software.intel.com/content/www/us/en/develop/blogs.html",
+      "feed_url": "https://community.intel.com/kloyf28888/rss/board?board.id=developer-software",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "nvidia-dev",
+      "company": "NVIDIA",
+      "category": "GPU Computing & Parallel Processing",
+      "blog_url": "https://developer.nvidia.com/blog/",
+      "feed_url": "https://developer.nvidia.com/blog/feed/",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "apple-dev",
+      "company": "Apple",
+      "category": "Operating Systems & Swift",
+      "blog_url": "https://developer.apple.com/news/",
+      "feed_url": "https://developer.apple.com/news/rss/news.rss",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "shopify-eng",
+      "company": "Shopify",
+      "category": "High-Volume Commerce & Ruby at Scale",
+      "blog_url": "https://shopify.engineering/",
+      "feed_url": "https://shopify.engineering/blog.atom",
+      "feed_type": "atom",
+      "active": true
+    },
+    {
+      "id": "yelp-eng",
+      "company": "Yelp",
+      "category": "Search & Local Data Infrastructure",
+      "blog_url": "https://engineeringblog.yelp.com/",
+      "feed_url": "https://engineeringblog.yelp.com/feed.xml",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "quora-eng",
+      "company": "Quora",
+      "category": "Knowledge Platforms & Ranking",
+      "blog_url": "https://engineering.quora.com/",
+      "feed_url": "https://engineering.quora.com/rss",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "square-block",
+      "company": "Block / Square",
+      "category": "Payments, Ledger & Mobile",
+      "blog_url": "https://developer.squareup.com/blog/",
+      "feed_url": "https://developer.squareup.com/blog/rss.xml",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "atlassian-dev",
+      "company": "Atlassian",
+      "category": "Collaboration Tools & Microservices",
+      "blog_url": "https://developer.atlassian.com/blog/",
+      "feed_url": "https://developer.atlassian.com/blog/rss.xml",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "box-eng",
+      "company": "Box",
+      "category": "Content Cloud & Security",
+      "blog_url": "https://www.box.com/blog/category/engineering/",
+      "feed_url": "https://blog.box.com/feed",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "vmware-code",
+      "company": "VMware",
+      "category": "Virtualization & Kubernetes",
+      "blog_url": "https://blogs.vmware.com/code/",
+      "feed_url": "https://blogs.vmware.com/code/feed",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "cisco-devnet",
+      "company": "Cisco DevNet",
+      "category": "Networking & Telemetry",
+      "blog_url": "https://blogs.cisco.com/developer/",
+      "feed_url": "https://blogs.cisco.com/developer/feed",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "redhat-dev",
+      "company": "Red Hat",
+      "category": "Linux Kernel & OpenShift",
+      "blog_url": "https://developers.redhat.com/blog/",
+      "feed_url": "https://developers.redhat.com/blog/feed",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "twilio-eng",
+      "company": "Twilio",
+      "category": "Telephony APIs & Messaging",
+      "blog_url": "https://www.twilio.com/blog/engineering",
+      "feed_url": "https://www.twilio.com/blog/engineering/feed",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "indeed-eng",
+      "company": "Indeed",
+      "category": "High-Volume Job Search & Matching",
+      "blog_url": "https://engineering.indeedblog.com/",
+      "feed_url": "https://engineering.indeedblog.com/feed/",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "capitalone-tech",
+      "company": "Capital One",
+      "category": "Fintech & Cloud Migration",
+      "blog_url": "https://medium.com/capital-one-tech",
+      "feed_url": "https://medium.com/feed/capital-one-tech",
+      "feed_type": "medium",
+      "active": true
+    },
+    {
+      "id": "target-tech",
+      "company": "Target",
+      "category": "Retail Infrastructure & Edge",
+      "blog_url": "https://tech.target.com/",
+      "feed_url": "https://tech.target.com/feed.xml",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "walmart-labs",
+      "company": "Walmart Global Tech",
+      "category": "Distributed Retail Scale",
+      "blog_url": "https://medium.com/walmartlabs",
+      "feed_url": "https://medium.com/feed/walmartlabs",
+      "feed_type": "medium",
+      "active": true
+    },
+    {
+      "id": "gitlab-eng",
+      "company": "GitLab",
+      "category": "DevSecOps & Asynchronous Culture",
+      "blog_url": "https://about.gitlab.com/blog/engineering/",
+      "feed_url": "https://about.gitlab.com/atom.xml",
+      "feed_type": "atom",
+      "active": true
+    },
+    {
+      "id": "adobe-tech",
+      "company": "Adobe",
+      "category": "Creative Cloud & Rendering",
+      "blog_url": "https://medium.com/adobetech",
+      "feed_url": "https://medium.com/feed/adobetech",
+      "feed_type": "medium",
+      "active": true
+    },
+    {
+      "id": "lyft-eng",
+      "company": "Lyft",
+      "category": "Ride Routing & Envoy Service Mesh",
+      "blog_url": "https://eng.lyft.com/",
+      "feed_url": "https://eng.lyft.com/feed",
+      "feed_type": "medium",
+      "active": true
+    },
+    {
+      "id": "mozilla-hacks",
+      "company": "Mozilla Hacks",
+      "category": "Web Standards, Rust & WebAssembly",
+      "blog_url": "https://hacks.mozilla.org/",
+      "feed_url": "https://hacks.mozilla.org/feed/",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "paypal-eng",
+      "company": "PayPal",
+      "category": "Payment Processing & Fraud Detection",
+      "blog_url": "https://www.paypal-engineering.com/",
+      "feed_url": "https://medium.com/feed/paypal-tech",
+      "feed_type": "medium",
+      "active": true
+    },
+    {
+      "id": "reddit-eng",
+      "company": "Reddit",
+      "category": "Community Scale & Caching",
+      "blog_url": "https://redditblog.com/category/engineering/",
+      "feed_url": "https://www.reddit.com/r/RedditEng/.rss",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "snap-eng",
+      "company": "Snapchat",
+      "category": "Low-Latency Media & Spatial",
+      "blog_url": "https://eng.snap.com/",
+      "feed_url": "https://eng.snap.com/feed",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "tesla-eng",
+      "company": "Tesla",
+      "category": "Embedded Systems & Autopilot",
+      "blog_url": "https://www.tesla.com/blog/engineering",
+      "feed_url": "https://www.tesla.com/blog/rss",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "wikimedia-tech",
+      "company": "Wikimedia",
+      "category": "Open Knowledge & High Read Volume",
+      "blog_url": "https://techblog.wikimedia.org/",
+      "feed_url": "https://techblog.wikimedia.org/feed/",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "zillow-eng",
+      "company": "Zillow",
+      "category": "Real Estate Data & Spatial Analytics",
+      "blog_url": "https://www.zillow.com/engineering/",
+      "feed_url": "https://www.zillow.com/engineering/feed/",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "datadog-eng",
+      "company": "Datadog",
+      "category": "Observability & Metric Aggregation",
+      "blog_url": "https://www.datadoghq.com/blog/engineering/",
+      "feed_url": "https://www.datadoghq.com/blog/engineering/index.xml",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "docker-eng",
+      "company": "Docker",
+      "category": "Containerization & Developer Workflow",
+      "blog_url": "https://www.docker.com/blog/engineering/",
+      "feed_url": "https://www.docker.com/blog/category/engineering/feed/",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "evernote-tech",
+      "company": "Evernote",
+      "category": "Note Sync & Document Graph",
+      "blog_url": "https://evernote.com/blog/tech/",
+      "feed_url": "https://evernote.com/blog/feed/",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "giphy-eng",
+      "company": "Giphy",
+      "category": "Search & Media Transcoding",
+      "blog_url": "https://engineering.giphy.com/",
+      "feed_url": "https://engineering.giphy.com/feed",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "godaddy-eng",
+      "company": "GoDaddy",
+      "category": "DNS, Hosting & Resilient Cloud",
+      "blog_url": "https://www.godaddy.com/engineering",
+      "feed_url": "https://www.godaddy.com/engineering/feed",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "mailchimp-eng",
+      "company": "Mailchimp",
+      "category": "Email Delivery & Queueing",
+      "blog_url": "https://mailchimp.com/developer/",
+      "feed_url": "https://mailchimp.com/developer/blogs/feed/",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "newrelic-eng",
+      "company": "New Relic",
+      "category": "APM & Telemetry Pipelines",
+      "blog_url": "https://blog.newrelic.com/engineering/",
+      "feed_url": "https://blog.newrelic.com/feed/",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "oracle-dev",
+      "company": "Oracle Developers",
+      "category": "Database Internals & Java",
+      "blog_url": "https://blogs.oracle.com/developers/",
+      "feed_url": "https://blogs.oracle.com/developers/rss",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "pagerduty-eng",
+      "company": "PagerDuty",
+      "category": "Incident Response & Reliable On-Call",
+      "blog_url": "https://www.pagerduty.com/blog/engineering/",
+      "feed_url": "https://www.pagerduty.com/blog/engineering/feed/",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "palantir-tech",
+      "company": "Palantir",
+      "category": "Ontology & Enterprise Data Federation",
+      "blog_url": "https://www.palantir.com/blog/",
+      "feed_url": "https://blog.palantir.com/feed",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "stripe-eng",
+      "company": "Stripe",
+      "category": "Payment Reliability & API Ergonomics",
+      "blog_url": "https://stripe.com/blog/engineering",
+      "feed_url": "https://stripe.com/blog/engineering/rss",
+      "feed_type": "rss",
+      "active": true
+    },
+    {
+      "id": "thoughtworks-tech",
+      "company": "ThoughtWorks Insights",
+      "category": "Evolutionary Architecture & Tech Radar",
+      "blog_url": "https://www.thoughtworks.com/insights",
+      "feed_url": "https://www.thoughtworks.com/rss/insights.xml",
+      "feed_type": "rss",
+      "active": true
+    }
+  ]
+}
