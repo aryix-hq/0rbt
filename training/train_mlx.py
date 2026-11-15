@@ -69,19 +69,46 @@ def run_dry_run(model_name: str, batch_size: int, grad_accum: int, lora_layers: 
 
 
 def run_training(model_name: str, batch_size: int, grad_accum: int, lora_layers: int, iters: int, lr: float):
-    try:
-        import mlx.core as mx
-        from mlx_lm import lora
-        print("==> MLX framework detected. Launching local training...")
-        # MLX training execution command
-        cmd = f"python3 -m mlx_lm.lora --model {model_name} --data {DATASET_DIR} --train --batch-size {batch_size} --iters {iters} --lora-layers {lora_layers} --adapter-path {OUTPUT_DIR} --learning-rate {lr}"
-        print(f"Running: {cmd}")
-        os.system(cmd)
-    except ImportError:
-        print("⚠️ MLX is not installed in the current Python environment.")
-        print("  To train locally on Apple Silicon Metal GPU, install MLX:")
-        print("    pip install mlx-lm")
-        print("  Then re-run this script.")
+    # Determine python executable (prefer local .venv if present)
+    venv_python = REPO_ROOT / ".venv" / "bin" / "python"
+    python_bin = str(venv_python) if venv_python.exists() else sys.executable
+
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+    cmd = [
+        python_bin, "-m", "mlx_lm.lora",
+        "--model", model_name,
+        "--data", str(DATASET_DIR),
+        "--train",
+        "--batch-size", str(batch_size),
+        "--grad-accumulation-steps", str(grad_accum),
+        "--iters", str(iters),
+        "--num-layers", str(lora_layers),
+        "--adapter-path", str(OUTPUT_DIR),
+        "--learning-rate", str(lr),
+        "--max-seq-length", "2048",
+        "--mask-prompt",
+        "--grad-checkpoint",
+        "--save-every", "100",
+        "--steps-per-report", "10"
+    ]
+
+    print("==================================================================")
+    print(" 🚀 LAUNCHING 0RBT MLX METAL FINE-TUNING RUN")
+    print(f" Python Binary:     {python_bin}")
+    print(f" Base Model:        {model_name}")
+    print(f" Training Iterations: {iters} (Standard 3-Epoch Run)")
+    print(f" Effective Batch:   {batch_size * grad_accum}")
+    print(f" Adapter Output:    {OUTPUT_DIR}")
+    print("==================================================================")
+    print(f"Command: {' '.join(cmd)}\n")
+
+    sys.stdout.flush()
+    ret = os.system(" ".join(cmd))
+    if ret != 0:
+        print(f"✘ MLX training failed with return code {ret}")
+        sys.exit(ret)
+    print("\n✔ LoRA Fine-Tuning Complete! Adapter saved to:", OUTPUT_DIR)
 
 
 def main():
@@ -90,7 +117,7 @@ def main():
     parser.add_argument("--batch-size", type=int, default=1, help="Batch size")
     parser.add_argument("--grad-accum", type=int, default=8, help="Gradient accumulation steps")
     parser.add_argument("--lora-layers", type=int, default=16, help="Number of LoRA layers")
-    parser.add_argument("--iters", type=int, default=1200, help="Training iterations")
+    parser.add_argument("--iters", type=int, default=600, help="Training iterations (default: 600 for 3 epochs)")
     parser.add_argument("--lr", type=float, default=2e-4, help="Learning rate")
     parser.add_argument("--dry-run", action="store_true", help="Print memory budget and parameters without loading model")
     parser.add_argument("--mock-test", action="store_true", help="Run deterministic mock tests in <0.05s")

@@ -19,12 +19,12 @@
 - [ ] `PLAN-005`: Model Fine-Tuning, LoRA Merging, GGUF Quantization & Ollama Hub Release (Planning Trio: `@product-manager`, `@architect`, `@project-manager`)
 
 ## Stage 4: Active Execution & Verification
-- [ ] `PLAN-005`: Phase 1 - Upstream Sync & Dataset Organization (`skills/architecture-tradeoff-analysis`, `stride-threat-modeling`, `INV-ARCH-01`)
-- [ ] `PLAN-005`: Phase 2 - Fine-Tuning Execution Pipeline (Pathway A: Local MLX on M4 Pro / Pathway B: Cloud GPU Unsloth)
-- [ ] `PLAN-005`: Phase 3 - LoRA Merging & GGUF Quantization (`models/0rbt-architect-q4_k_m.gguf`)
-- [ ] `PLAN-005`: Phase 4 - Modelfile Wiring & Local Ollama Rebuild (`aryix/0rbt-architect`)
-- [ ] `PLAN-005`: Phase 5 - Head-to-Head Benchmark Validation (`bin/benchmark-50.py --live`)
-- [ ] `PLAN-005`: Phase 6 - Ollama Hub Weight Publication (`ollama push aryix/0rbt-architect`)
+- [x] `PLAN-005`: Phase 1 - Upstream Sync & Dataset Organization (`skills/architecture-tradeoff-analysis`, `stride-threat-modeling`, `INV-ARCH-01`)
+- [x] `PLAN-005`: Phase 2 - Fine-Tuning Execution Pipeline (Pathway A: Local MLX on M4 Pro / Pathway B: Cloud GPU Unsloth)
+- [x] `PLAN-005`: Phase 3 - LoRA Merging & GGUF Quantization (`models/0rbt-architect-q4_k_m.gguf`)
+- [x] `PLAN-005`: Phase 4 - Modelfile Wiring & Local Ollama Rebuild (`aryix/0rbt-architect`)
+- [x] `PLAN-005`: Phase 5 - Head-to-Head Benchmark Validation (`bin/benchmark-50.py --live`)
+- [/] `PLAN-005`: Phase 6 - Ollama Hub Weight Publication (`ollama push aryix/0rbt-architect` in-flight background)
 
 ## Completed (EM Approved PR & Merged)
 - [x] `PLAN-004`: Phase 1 - 255-Skill AST Ingestion & Instruction Dataset Expansion (`bin/synthesize-all-skills-dataset.py`, 5,508 ChatML pairs)

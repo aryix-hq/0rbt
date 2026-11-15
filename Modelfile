@@ -3,7 +3,7 @@
 # Certified Open-Weights Decision Engine for AI Agents & Systems Engineers
 # ==============================================================================
 
-FROM qwen2.5-coder:14b
+FROM ./models/0rbt-architect-q4_k_m.gguf
 
 # Runtime Parameters
 PARAMETER temperature 0.2

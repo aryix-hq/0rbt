@@ -29,6 +29,7 @@ node_modules/
 
 # Model weights & intermediate training artifacts
 models/
+llama.cpp/
 *.gguf
 *.safetensors
 *.bin
