@@ -9,14 +9,24 @@
 - [x] `FEAT-001`: Autonomous Engineering Blog Intelligence Pipeline (RICE Score: `85.5`) (Lead: `@product-manager`)
 - [x] `FEAT-002`: AI-Agents Skills & Anti-Vibe Invariants Model Integration (RICE Score: `84.0`) (Lead: `@product-manager`)
 - [x] `FEAT-003`: Complete 255-Skill AI-Agents Suite & Offensive Red Team Integration (RICE Score: `88.0`) (Lead: `@product-manager`, `@architect`)
+- [ ] `FEAT-004`: Neural Weights Fine-Tuning, LoRA Merging & Ollama Hub Release (RICE Score: `89.5`) (Lead: `@product-manager`, `@architect`)
 
 ## Stage 3: Phased Project Planning
 - [x] `PLAN-001`: Autonomous Engineering Blog Intelligence Pipeline (Planning Trio: `@product-manager`, `@architect`, `@project-manager`)
 - [x] `PLAN-002`: Open-Source Launch, Public Dataset & `aryix/0rbt-architect` Model Release (Planning Trio: `@product-manager`, `@architect`, `@project-manager`)
 - [x] `PLAN-003`: AI-Agents Skills & Anti-Vibe Invariants Integration into aryix/0rbt-architect (Planning Trio: `@product-manager`, `@architect`, `@project-manager`)
 - [x] `PLAN-004`: Complete 255-Skill AI-Agents Suite, Offensive Red Team Ingestion & 32K Native Context Upgrade (Planning Trio: `@product-manager`, `@architect`, `@project-manager`)
+- [ ] `PLAN-005`: Model Fine-Tuning, LoRA Merging, GGUF Quantization & Ollama Hub Release (Planning Trio: `@product-manager`, `@architect`, `@project-manager`)
 
 ## Stage 4: Active Execution & Verification
+- [ ] `PLAN-005`: Phase 1 - Upstream Sync & Dataset Organization (`skills/architecture-tradeoff-analysis`, `stride-threat-modeling`, `INV-ARCH-01`)
+- [ ] `PLAN-005`: Phase 2 - Fine-Tuning Execution Pipeline (Pathway A: Local MLX on M4 Pro / Pathway B: Cloud GPU Unsloth)
+- [ ] `PLAN-005`: Phase 3 - LoRA Merging & GGUF Quantization (`models/0rbt-architect-q4_k_m.gguf`)
+- [ ] `PLAN-005`: Phase 4 - Modelfile Wiring & Local Ollama Rebuild (`aryix/0rbt-architect`)
+- [ ] `PLAN-005`: Phase 5 - Head-to-Head Benchmark Validation (`bin/benchmark-50.py --live`)
+- [ ] `PLAN-005`: Phase 6 - Ollama Hub Weight Publication (`ollama push aryix/0rbt-architect`)
+
+## Completed (EM Approved PR & Merged)
 - [x] `PLAN-004`: Phase 1 - 255-Skill AST Ingestion & Instruction Dataset Expansion (`bin/synthesize-all-skills-dataset.py`, 5,508 ChatML pairs)
 - [x] `PLAN-004`: Phase 2 - Modelfile System Prompt Grounding, 3-Tier Hierarchy & 32K Context Upgrade (`Modelfile`, `num_ctx 32768`)
 - [x] `PLAN-004`: Phase 3 - Local Ollama Model Rebuild & Hub Manifest Push (`aryix/0rbt-architect:latest` pushed to Ollama Hub)

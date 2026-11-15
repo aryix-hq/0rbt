@@ -18,14 +18,20 @@ import json
 import argparse
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATASET_FILE = os.path.join(REPO_ROOT, "dataset", "instruction_tuning_v1.jsonl")
+DATASET_FILE = os.path.join(REPO_ROOT, "dataset", "curated_finetune_dataset.jsonl")
 OUTPUT_DIR = os.path.join(REPO_ROOT, "models", "0rbt-architect-adapter")
 
 
 def format_instruction_prompt(sample: dict) -> str:
-    """Formats Alpaca sample into ChatML / Qwen prompt format."""
-    system = "You are aryix/0rbt-architect, a Principal Distributed Systems Architect enforcing battle-tested invariants and pragmatic downscale architectures."
-    user = f"{sample['instruction']}\n\nContext:\n{sample.get('input', '')}"
+    """Formats Alpaca or ChatML sample into canonical ChatML / Qwen prompt format."""
+    if "messages" in sample:
+        formatted = ""
+        for m in sample["messages"]:
+            formatted += f"<|im_start|>{m['role']}\n{m['content']}<|im_end|>\n"
+        return formatted
+
+    system = "You are aryix/0rbt-architect, a specialized engineering assistant focused on distributed systems architecture, SRE resilience, and application security."
+    user = f"{sample['instruction']}\n\nContext:\n{sample.get('input', '')}" if sample.get('input') else sample['instruction']
     assistant = sample['output']
     
     return f"<|im_start|>system\n{system}<|im_end|>\n<|im_start|>user\n{user}<|im_end|>\n<|im_start|>assistant\n{assistant}<|im_end|>\n"
