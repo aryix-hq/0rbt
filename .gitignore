@@ -33,6 +33,7 @@ llama.cpp/
 *.gguf
 *.safetensors
 *.bin
+dataset/valid.jsonl
 
 # Local agent plugins & transient sessions
 .agents/plugins.json
